@@ -134,21 +134,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		}
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (presenter.onOptionsItemSelected(item.getItemId())) {
-//			case -1:
-//				return super.onOptionsItemSelected(item);
-//			case 0:
-//				return false;
-//			case 1:
-//				return true;
-//			default:
-//				return super.onOptionsItemSelected(item);
-//		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	@SuppressWarnings("StatementWithEmptyBody")
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
@@ -171,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 	@Override
 	public void refreshFragment() {
+		weatherFragment.setRefreshing(true);
 		weatherFragment.onRefresh();
 	}
 
