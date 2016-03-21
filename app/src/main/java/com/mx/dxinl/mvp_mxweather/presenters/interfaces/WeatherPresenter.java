@@ -7,10 +7,6 @@ import android.widget.ImageView;
  */
 public interface WeatherPresenter {
 
-	void onNavigationItemSelected(int itemId);
-
-	int onOptionsItemSelected(int itemId);
-
 	void showData(String name);
 
 	void cancelGetWeatherTask();

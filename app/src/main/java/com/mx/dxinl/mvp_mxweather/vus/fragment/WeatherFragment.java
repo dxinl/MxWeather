@@ -1,11 +1,7 @@
 package com.mx.dxinl.mvp_mxweather.vus.fragment;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +23,6 @@ import com.mx.dxinl.mvp_mxweather.vus.interfaces.IWeatherView;
 import com.mx.dxinl.mvp_mxweather.vus.view.DailyTemperatureView;
 import com.mx.dxinl.mvp_mxweather.vus.view.HourlyWeatherView;
 
-import java.net.PasswordAuthentication;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,10 +92,10 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 	public void setDailyWeatherData(List<DailyWeatherBean> dailyWeathers) {
 		if (dailyWeathers != null) {
 			dailyTemperatureView.setData(dailyWeathers);
-			WeatherIconsFragment dayWeatherFragment = WeatherIconsFragment.newInstance(dailyWeathers);
+			WeatherIconsFragment dayWeatherFragment = WeatherIconsFragment.newInstance(presenter, dailyWeathers);
 			getChildFragmentManager().beginTransaction().replace(R.id.day_weather, dayWeatherFragment).commitAllowingStateLoss();
 
-			WeatherIconsFragment nightWeatherFragment = WeatherIconsFragment.newInstance(dailyWeathers, true);
+			WeatherIconsFragment nightWeatherFragment = WeatherIconsFragment.newInstance(presenter, dailyWeathers, true);
 			getChildFragmentManager().beginTransaction().replace(R.id.night_weather, nightWeatherFragment).commitAllowingStateLoss();
 		}
 	}

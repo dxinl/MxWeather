@@ -36,21 +36,6 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 	}
 
 	@Override
-	public void onNavigationItemSelected(int itemId) {
-
-	}
-
-	@Override
-	public int onOptionsItemSelected(int itemId) {
-		int result = -1;
-		switch (itemId) {
-			case R.id.action_settings:
-				break;
-		}
-		return result;
-	}
-
-	@Override
 	public void showData(String name) {
 		requestTask = new RequestCityWeatherTask();
 		requestTask.execute(name, "weather");

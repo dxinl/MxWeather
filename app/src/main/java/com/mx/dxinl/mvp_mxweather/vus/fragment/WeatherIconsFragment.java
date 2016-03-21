@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.mx.dxinl.mvp_mxweather.model.bean.DailyWeatherBean;
-import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
+import com.mx.dxinl.mvp_mxweather.presenters.interfaces.WeatherPresenter;
 
 import java.util.List;
 
@@ -17,21 +17,20 @@ import java.util.List;
  * Created by DengXinliang on 2016/3/17.
  */
 public class WeatherIconsFragment extends Fragment {
+	private WeatherPresenter presenter;
 	private List<DailyWeatherBean> dailyWeathers;
 	private boolean showNightWeather;
 
-	public static WeatherIconsFragment newInstance(List<DailyWeatherBean> dailyWeathers) {
-		Bundle args = new Bundle();
-		WeatherIconsFragment fragment = new WeatherIconsFragment();
-		fragment.setArguments(args);
-		fragment.dailyWeathers = dailyWeathers;
-		return fragment;
+	public static WeatherIconsFragment newInstance(WeatherPresenter presenter, List<DailyWeatherBean> dailyWeathers) {
+		return newInstance(presenter, dailyWeathers, false);
 	}
 
-	public static WeatherIconsFragment newInstance(List<DailyWeatherBean> dailyWeathers, boolean showNightWeather) {
+	public static WeatherIconsFragment newInstance(WeatherPresenter presenter,
+	                                               List<DailyWeatherBean> dailyWeathers, boolean showNightWeather) {
 		Bundle args = new Bundle();
 		WeatherIconsFragment fragment = new WeatherIconsFragment();
 		fragment.setArguments(args);
+		fragment.presenter = presenter;
 		fragment.dailyWeathers = dailyWeathers;
 		fragment.showNightWeather = showNightWeather;
 		return fragment;
@@ -57,9 +56,9 @@ public class WeatherIconsFragment extends Fragment {
 			ImageView imageView = new ImageView(getContext());
 			imageView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
 			if (!showNightWeather) {
-				ImageLoader.get().setImageBitmap(imageView, dailyWeather.code_d);
+				presenter.setImageBitmap(imageView, dailyWeather.code_d);
 			} else {
-				ImageLoader.get().setImageBitmap(imageView, dailyWeather.code_n);
+				presenter.setImageBitmap(imageView, dailyWeather.code_n);
 			}
 			((LinearLayout) view).addView(imageView);
 		}
