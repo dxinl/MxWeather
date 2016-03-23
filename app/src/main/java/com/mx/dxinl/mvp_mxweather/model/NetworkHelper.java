@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by DengXinliang on 2016/1/29.
@@ -31,7 +32,7 @@ public class NetworkHelper {
 		return INSTANCE;
 	}
 
-	public JSONObject getJSONFromNetwork(int timeOut, String city, String apiType) throws IOException, JSONException {
+	public JSONObject getJSONFromNetwork(int timeOut, String city, String apiType) throws IOException, JSONException, TimeoutException {
 		String urlStr = String.format(HTTP_API, apiType, city, KEY);
 		InputStream is = getInputStreamFromNetwork(timeOut, urlStr);
 		if (is == null) {
@@ -49,7 +50,7 @@ public class NetworkHelper {
 		return new JSONObject(sbd.toString());
 	}
 
-	public Bitmap getBitmapFromNetwork(int timeOut, String code) throws IOException {
+	public Bitmap getBitmapFromNetwork(int timeOut, String code) throws IOException, TimeoutException {
 		String urlStr = "http://files.heweather.com/cond_icon/" + code + ".png";
 		InputStream is = getInputStreamFromNetwork(timeOut, urlStr);
 		if (is == null) {

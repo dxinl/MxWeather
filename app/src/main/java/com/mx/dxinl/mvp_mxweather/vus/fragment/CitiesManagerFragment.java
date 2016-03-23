@@ -34,6 +34,7 @@ public class CitiesManagerFragment extends HasOptionsMenuFragment implements ICi
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
 		getActivity().setTitle(getString(R.string.manage_city));
 		presenter = new CitiesManagerPresenterImpl(getActivity(), this);
 

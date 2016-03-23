@@ -24,6 +24,20 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+
+		<receiver
+			android:name=".vus.widget.Widget2_1">
+			<meta-data
+				android:name="android.appwidget.provider"
+				android:resource="@xml/appwidget_provider2_1">
+			</meta-data>
+
+			<intent-filter>
+				<action android:name="com.mx.dxinl.mxweather.action.CLICK"/>
+				<action android:name="com.mx.dxinl.mxweather.action.REFRESH"/>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+			</intent-filter>
+		</receiver>
 	</application>
 
 </manifest>

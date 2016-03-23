@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by DengXinliang on 2016/3/14.
@@ -58,6 +59,21 @@ public class ImageLoader {
 		}
 
 		setBitmapFromNetwork(view, code);
+	}
+
+	public Bitmap getImageBitmap(String code) {
+		Bitmap bitmap = getBitmapFromMemory(code);
+		if (bitmap != null) {
+			return bitmap;
+		}
+
+		bitmap = getBitmapFromDisk(code);
+		if (bitmap != null) {
+			return bitmap;
+		}
+
+		bitmap = getBitmapFromNetwork(code);
+		return bitmap;
 	}
 
 	public synchronized void cancelGetImgTask() {
@@ -163,6 +179,9 @@ public class ImageLoader {
 			putToBitmapCache(code, bitmap);
 			return bitmap;
 		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (TimeoutException e) {
 			e.printStackTrace();
 			return null;
 		}

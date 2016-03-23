@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by DengXinliang on 2016/1/28.
@@ -70,6 +71,9 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return null;
+			} catch (TimeoutException e) {
+				e.printStackTrace();
+				return null;
 			}
 		}
 
@@ -77,7 +81,8 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 		protected void onPostExecute(JSONObject jsonObject) {
 			super.onPostExecute(jsonObject);
 			if (jsonObject == null) {
-				Log.e(WeatherPresenterImpl.class.getSimpleName(), "Cannot GET JSON From Network.");
+				Toast.makeText(view.getContext(), R.string.cannot_get_data_from_network, Toast.LENGTH_SHORT).show();
+				view.setRefreshing(false);
 				return;
 			}
 

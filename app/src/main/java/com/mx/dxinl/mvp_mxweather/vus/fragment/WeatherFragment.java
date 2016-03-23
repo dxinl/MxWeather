@@ -1,6 +1,7 @@
 package com.mx.dxinl.mvp_mxweather.vus.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.mx.dxinl.mvp_mxweather.vus.base.HasOptionsMenuFragment;
 import com.mx.dxinl.mvp_mxweather.vus.interfaces.IWeatherView;
 import com.mx.dxinl.mvp_mxweather.vus.view.DailyTemperatureView;
 import com.mx.dxinl.mvp_mxweather.vus.view.HourlyWeatherView;
+import com.mx.dxinl.mvp_mxweather.vus.widget.Widget2_1;
 
 import java.util.List;
 
@@ -141,6 +143,14 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			setNowWeather(nowWeather);
 			setAirQuality(airQuality);
 			setSuggestion(suggestion);
+		}
+
+		if (nowWeather != null) {
+			Intent intent = new Intent();
+			intent.setAction(Widget2_1.REFRESH_ACTION);
+			intent.putExtra("NowWeather", nowWeather);
+			intent.putExtra("CurrentCity", ((MainActivity) getActivity()).getCurrentCityName());
+					getActivity().sendBroadcast(intent);
 		}
 	}
 

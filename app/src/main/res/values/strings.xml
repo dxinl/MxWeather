@@ -19,6 +19,7 @@
 	<string name="load_failed">加载数据失败</string>
 
 	<string name="incorrect_city">查询的是不存在的城市/地点</string>
+	<string name="cannot_get_data_from_network">不能从网络下载数据，请检查您的网络连接。</string>
 	<string name="incorrect_json">获取的JSON格式不正确</string>
 	<string name="add_city">添加城市</string>
 	<string name="remove_city">删除城市</string>
@@ -28,6 +29,7 @@
 	<string name="attractions">景点</string>
 	<string name="search_hint">搜索</string>
 
+	<string name="tmp">°</string>
 	<string name="humidity">相对湿度%1$s</string>
 	<string name="wind">%1$s级</string>
 	<string name="visibility">能见度%1$sKM</string>
