@@ -14,6 +14,7 @@ import com.mx.dxinl.mvp_mxweather.presenters.impl.CitiesPresenterImpl;
 import com.mx.dxinl.mvp_mxweather.presenters.interfaces.CitiesPresenter;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +55,11 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 	}
 
 	public void setCitiesList(String query) {
-		cities.clear();
+		if (cities != null) {
+			cities.clear();
+		} else {
+			cities = new ArrayList<>();
+		}
 		cities.addAll(presenter.getCitiesList(query, type));
 		adapter.notifyDataSetChanged();
 	}

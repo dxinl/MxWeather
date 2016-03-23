@@ -104,7 +104,8 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 
 	public void setNowWeather(NowWeatherBean nowWeather) {
 		if (nowWeather != null) {
-			temperature.setText(nowWeather.tmp);
+			String tmp = nowWeather.tmp + "°";
+			temperature.setText(tmp);
 			setWeatherIcon(nowWeather.code);
 			weatherDesc.setText(nowWeather.txt);
 

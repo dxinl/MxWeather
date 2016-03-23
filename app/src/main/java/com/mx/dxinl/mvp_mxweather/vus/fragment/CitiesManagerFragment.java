@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.mx.dxinl.mvp_mxweather.R;
@@ -83,12 +84,14 @@ public class CitiesManagerFragment extends HasOptionsMenuFragment implements ICi
 			String text = cityInfo.first + " - " + cityInfo.second;
 			holder.cityInfo.setText(text);
 
-			if (presenter.getSelectedCities().contains(cityInfo)) {
-				holder.itemView.setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-				holder.cityInfo.setTextColor(getResources().getColor(android.R.color.white));
-			} else {
-				holder.itemView.setBackgroundColor(getResources().getColor(R.color.cardview_light_background));
-				holder.cityInfo.setTextColor(getResources().getColor(android.R.color.black));
+			try {
+				if (presenter.getSelectedCities().contains(cityInfo)) {
+					holder.checkBox.setChecked(true);
+				} else {
+					holder.checkBox.setChecked(false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -100,13 +103,13 @@ public class CitiesManagerFragment extends HasOptionsMenuFragment implements ICi
 
 	private final class ListHolder extends RecyclerView.ViewHolder {
 		TextView cityInfo;
-		View itemView;
+		CheckBox checkBox;
 
 		public ListHolder(View itemView) {
 			super(itemView);
-			this.itemView = itemView;
 			itemView.setOnClickListener(CitiesManagerFragment.this);
 			cityInfo = (TextView) itemView.findViewById(R.id.city_name);
+			checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
 		}
 	}
 }
