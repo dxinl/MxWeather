@@ -19,5 +19,7 @@ public interface IWeatherView {
 
 	void setRefreshing(boolean isRefreshing);
 
+	void updateWidget2_1(NowWeatherBean nowWeatherBean);
+
 	Context getContext();
 }

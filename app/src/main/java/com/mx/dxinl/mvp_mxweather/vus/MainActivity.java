@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.mx.dxinl.mvp_mxweather.R;
@@ -58,12 +56,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				ActivityCompat.requestPermissions(this,
 						permissionsRequest.toArray(new String[permissionsRequest.size()]),
 						PERMISSION_REQUEST_CODE);
-			} else {
-				initActivity();
 			}
-		} else {
-			initActivity();
 		}
+		initActivity();
 	}
 
 	private void initActivity() {
@@ -113,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 						Toast.makeText(MainActivity.this, tips, Toast.LENGTH_SHORT).show();
 					}
 				}
-				initActivity();
+
+				weatherFragment.onRefresh();
 				break;
 		}
 	}

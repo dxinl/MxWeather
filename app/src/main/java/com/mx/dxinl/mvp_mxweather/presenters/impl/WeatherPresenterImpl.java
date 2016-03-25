@@ -99,6 +99,9 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 			SuggestionBean suggestion = jsonHelper.getSuggestion();
 
 			view.setData(hourlyWeathers, nowWeather, airQuality, dailyWeathers, suggestion);
+			if (nowWeather != null) {
+				view.updateWidget2_1(nowWeather);
+			}
 			view.setRefreshing(false);
 		}
 	}

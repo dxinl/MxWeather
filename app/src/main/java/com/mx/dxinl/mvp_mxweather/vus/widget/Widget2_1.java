@@ -15,8 +15,7 @@ import android.widget.RemoteViews;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.bean.NowWeatherBean;
-import com.mx.dxinl.mvp_mxweather.presenters.impl.WidgetPresenterImpl;
-import com.mx.dxinl.mvp_mxweather.presenters.interfaces.WidgetPresenter;
+import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
 
 /**
@@ -36,12 +35,11 @@ public class Widget2_1 extends AppWidgetProvider {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					WidgetPresenter presenter = new WidgetPresenterImpl();
 					RemoteViews remoteViews = new RemoteViews(
 							context.getPackageName(), R.layout.widget2_1);
-					Bitmap bitmap = presenter.getImageBitmap(context, nowWeather.code);
+					Bitmap bitmap = getImageBitmap(context, nowWeather.code);
 					remoteViews.setImageViewBitmap(
-							R.id.weather_icon, presenter.drawWeatherIconForWidget(context, bitmap));
+							R.id.weather_icon, drawWeatherIconForWidget(context, bitmap));
 					remoteViews.setTextViewText(R.id.temperature,
 							nowWeather.tmp + context.getResources().getString(R.string.tmp));
 					remoteViews.setTextViewText(R.id.city_name, cityName != null ? cityName : "");
@@ -73,5 +71,33 @@ public class Widget2_1 extends AppWidgetProvider {
 		Intent clickIntent = new Intent(context, MainActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, clickIntent, 0);
 		remoteViews.setOnClickPendingIntent(R.id.widget2_1, pendingIntent);
+	}
+
+	private Bitmap getImageBitmap(Context context, String code) {
+		Bitmap bitmap = ImageLoader.get().getImageBitmap(code);
+		if (bitmap == null) {
+			return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+		}
+		return bitmap;
+	}
+
+	public Bitmap drawWeatherIconForWidget(Context context, Bitmap bitmap) {
+		try {
+			Bitmap bkgBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.transparent_circle_bkg_white);
+			int width = bkgBmp.getWidth();
+			int height = bkgBmp.getHeight();
+			Bitmap tmpBmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			Canvas canvas = new Canvas(tmpBmp);
+
+			Paint paint = new Paint();
+			paint.setAntiAlias(true);
+			canvas.drawBitmap(bkgBmp, 0, 0, null);
+			canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+					new Rect(width / 6, height / 6, width * 5 / 6, height * 5 / 6), paint);
+			return tmpBmp;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return bitmap;
+		}
 	}
 }

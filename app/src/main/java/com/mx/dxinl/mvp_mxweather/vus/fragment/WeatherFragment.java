@@ -145,19 +145,20 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			setAirQuality(airQuality);
 			setSuggestion(suggestion);
 		}
-
-		if (nowWeather != null) {
-			Intent intent = new Intent();
-			intent.setAction(Widget2_1.REFRESH_ACTION);
-			intent.putExtra("NowWeather", nowWeather);
-			intent.putExtra("CurrentCity", ((MainActivity) getActivity()).getCurrentCityName());
-					getActivity().sendBroadcast(intent);
-		}
 	}
 
 	@Override
 	public void setRefreshing(boolean isRefreshing) {
 		swipeRefreshLayout.setRefreshing(isRefreshing);
+	}
+
+	@Override
+	public void updateWidget2_1(NowWeatherBean nowWeather) {
+		Intent intent = new Intent();
+		intent.setAction(Widget2_1.REFRESH_ACTION);
+		intent.putExtra("NowWeather", nowWeather);
+		intent.putExtra("CurrentCity", ((MainActivity) getActivity()).getCurrentCityName());
+		getActivity().sendBroadcast(intent);
 	}
 
 	@Override

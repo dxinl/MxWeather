@@ -17,6 +17,7 @@ import java.util.List;
  * Created by DengXinliang on 2016/1/29.
  */
 public class JSONHelper {
+	private final boolean DEBUG = false;
 	private final String HEADER = "HeWeather data service 3.0";
 	private JSONObject jsonObject;
 
@@ -28,7 +29,9 @@ public class JSONHelper {
 		try {
 			JSONArray header = jsonObject.getJSONArray(HEADER);
 			String status = header.getJSONObject(0).getString("status");
-			System.out.println(status);
+			if (DEBUG) {
+				System.out.println(status);
+			}
 			return status.equalsIgnoreCase("OK");
 		} catch (JSONException e) {
 			e.printStackTrace();
