@@ -1,7 +1,6 @@
 package com.mx.dxinl.mvp_mxweather.presenters.impl;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -46,7 +45,6 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 	public void cancelGetWeatherTask() {
 		if (requestTask != null) {
 			requestTask.cancel(true);
-			Log.d(WeatherPresenterImpl.class.getSimpleName(), "cancel request task");
 		}
 		ImageLoader.get().cancelGetImgTask();
 	}

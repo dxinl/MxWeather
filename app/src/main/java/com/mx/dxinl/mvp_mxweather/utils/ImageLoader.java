@@ -121,7 +121,6 @@ public class ImageLoader {
 	private synchronized void putToBitmapCache(String code, Bitmap bitmap) {
 		int newBmpSize = sizeOf(bitmap);
 		while (true) {
-			Log.e(ImageLoader.class.getSimpleName(), String.valueOf(size));
 			if (size + newBmpSize < MAX_SIZE * 1024 * 1024) {
 				bitmapCache.put(code, bitmap);
 				size += newBmpSize;
