@@ -17,6 +17,7 @@ import java.util.concurrent.TimeoutException;
  * Created by DengXinliang on 2016/1/29.
  */
 public class NetworkHelper {
+	private static final boolean DEBUG = false;
 	private static NetworkHelper INSTANCE = null;
 
 	private final String KEY = "29a97c76564c46769d05279c3105cc4c";
@@ -46,7 +47,9 @@ public class NetworkHelper {
 		while ((length = reader.read(buffer)) > 0) {
 			sbd.append(buffer, 0, length);
 		}
-		System.out.println(sbd.toString());
+		if (DEBUG) {
+			System.out.println(sbd.toString());
+		}
 		return new JSONObject(sbd.toString());
 	}
 
