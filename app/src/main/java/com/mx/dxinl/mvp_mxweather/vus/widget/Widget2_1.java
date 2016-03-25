@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.widget.RemoteViews;
 
 import com.mx.dxinl.mvp_mxweather.R;
@@ -84,16 +85,21 @@ public class Widget2_1 extends AppWidgetProvider {
 	public Bitmap drawWeatherIconForWidget(Context context, Bitmap bitmap) {
 		try {
 			Bitmap bkgBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.transparent_circle_bkg_white);
-			int width = bkgBmp.getWidth();
-			int height = bkgBmp.getHeight();
-			Bitmap tmpBmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			int width = bitmap.getWidth();
+			int height = bitmap.getHeight();
+			int padding = context.getResources().getDimensionPixelSize(R.dimen.small_padding);
+			Bitmap tmpBmp = Bitmap.createBitmap(width + padding * 2, height + padding * 2, Bitmap.Config.ARGB_8888);
 			Canvas canvas = new Canvas(tmpBmp);
 
 			Paint paint = new Paint();
 			paint.setAntiAlias(true);
-			canvas.drawBitmap(bkgBmp, 0, 0, null);
-			canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
-					new Rect(width / 6, height / 6, width * 5 / 6, height * 5 / 6), paint);
+			paint.setFilterBitmap(true);
+			paint.setDither(true);
+
+			canvas.drawBitmap(bkgBmp, new Rect(0, 0, bkgBmp.getWidth(), bkgBmp.getHeight()),
+					new RectF(0, 0, width + padding * 2, height + padding * 2), paint);
+			canvas.drawBitmap(bitmap, new Rect(0, 0, width, height),
+					new RectF(padding, padding, width, height), paint);
 			return tmpBmp;
 		} catch (Exception e) {
 			e.printStackTrace();
