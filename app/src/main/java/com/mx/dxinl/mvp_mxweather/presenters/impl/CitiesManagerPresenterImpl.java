@@ -1,11 +1,11 @@
 package com.mx.dxinl.mvp_mxweather.presenters.impl;
 
 import android.content.Context;
-import android.util.Pair;
 import android.view.MenuItem;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
+import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 import com.mx.dxinl.mvp_mxweather.presenters.interfaces.CitiesManagerPresenter;
 import com.mx.dxinl.mvp_mxweather.vus.interfaces.ICitiesManagerView;
 
@@ -16,8 +16,8 @@ import java.util.List;
  * Created by DengXinliang on 2016/3/14.
  */
 public class CitiesManagerPresenterImpl implements CitiesManagerPresenter {
-	private List<Pair<String, String>> citiesListData;
-	private List<Pair<String, String>> selectedCities = new ArrayList<>();
+	private List<CityInfo> citiesListData;
+	private List<CityInfo> selectedCities = new ArrayList<>();
 	private ICitiesManagerView view;
 	private SharedPreferencesHelper spHelper;
 
@@ -27,7 +27,7 @@ public class CitiesManagerPresenterImpl implements CitiesManagerPresenter {
 	}
 
 	@Override
-	public List<Pair<String, String>> getCitiesListData(boolean isNeedUpdate) {
+	public List<CityInfo> getCitiesListData(boolean isNeedUpdate) {
 		if (citiesListData == null || isNeedUpdate) {
 			citiesListData = spHelper.getCitiesInfo();
 		}
@@ -35,13 +35,13 @@ public class CitiesManagerPresenterImpl implements CitiesManagerPresenter {
 	}
 
 	@Override
-	public List<Pair<String, String>> getSelectedCities() {
+	public List<CityInfo> getSelectedCities() {
 		return selectedCities;
 	}
 
 	@Override
 	public void onClickCity(int position) {
-		Pair<String, String> cityInfo = citiesListData.get(position);
+		CityInfo cityInfo = citiesListData.get(position);
 		if (selectedCities.contains(cityInfo)) {
 			selectedCities.remove(cityInfo);
 		} else {

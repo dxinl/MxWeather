@@ -15,7 +15,7 @@ public class CitiesPresenterImpl implements CitiesPresenter {
 	}
 
 	@Override
-	public String getCurrentCityNum(String city) {
-		return DBQueryHelper.queryCityNum(city);
+	public String getCurrentCityNum(String city, String type) {
+		return DBQueryHelper.queryCityNum(city, type);
 	}
 }

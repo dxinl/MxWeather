@@ -169,8 +169,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		return presenter.getCurrentCityName();
 	}
 
-	public void setCurrentCity(String cityName, String cityNum) {
-		presenter.setCurrentCity(cityName, cityNum);
+	public String getCurrentCityType() {
+		return presenter.getCurrentCityType();
+	}
+
+	public void setCurrentCity(String cityName, String cityNum, String cityType) {
+		presenter.setCurrentCity(cityName, cityNum, cityType);
 	}
 
 	public void invalidateNavigationMenu() {

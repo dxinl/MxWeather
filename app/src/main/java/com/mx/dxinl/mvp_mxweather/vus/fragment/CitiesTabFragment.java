@@ -37,7 +37,7 @@ public class CitiesTabFragment extends HasOptionsMenuFragment {
 
 		pager = (ViewPager) view.findViewById(R.id.pager);
 
-		CitiesListFragment citiesFragment = CitiesListFragment.newInstance("cities");
+		CitiesListFragment citiesFragment = CitiesListFragment.newInstance("weather");
 		CitiesListFragment attractionsFragment = CitiesListFragment.newInstance("attractions");
 
 		fragments = new CitiesListFragment[] {citiesFragment, attractionsFragment};

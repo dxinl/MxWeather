@@ -7,7 +7,7 @@ import android.widget.ImageView;
  */
 public interface WeatherPresenter {
 
-	void showData(String name);
+	void showData(String name, String type);
 
 	void cancelGetWeatherTask();
 

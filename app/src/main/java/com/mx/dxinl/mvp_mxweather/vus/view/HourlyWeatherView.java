@@ -3,6 +3,7 @@ package com.mx.dxinl.mvp_mxweather.vus.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Build;
@@ -71,6 +72,9 @@ public class HourlyWeatherView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		if (hourlyWeathers == null) {
+			rectF.set(0, 0, getWidth(), getHeight());
+			paint.setColor(Color.WHITE);
+			canvas.drawRect(rectF, paint);
 			return;
 		}
 
@@ -140,6 +144,11 @@ public class HourlyWeatherView extends View {
 			}
 		}
 
+		invalidate();
+	}
+
+	public void clearData() {
+		hourlyWeathers = null;
 		invalidate();
 	}
 }

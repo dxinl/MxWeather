@@ -36,9 +36,9 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 	}
 
 	@Override
-	public void showData(String name) {
+	public void showData(String num, String type) {
 		requestTask = new RequestCityWeatherTask();
-		requestTask.execute(name, "weather");
+		requestTask.execute(num, type);
 	}
 
 	@Override
@@ -78,15 +78,17 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 		@Override
 		protected void onPostExecute(JSONObject jsonObject) {
 			super.onPostExecute(jsonObject);
+			view.setRefreshing(false);
 			if (jsonObject == null) {
 				Toast.makeText(view.getContext(), R.string.cannot_get_data_from_network, Toast.LENGTH_SHORT).show();
-				view.setRefreshing(false);
+				view.clearAllData();
 				return;
 			}
 
 			JSONHelper jsonHelper = new JSONHelper(jsonObject);
 			if (!jsonHelper.checkJSONObject()) {
 				Toast.makeText(view.getContext(), R.string.incorrect_city, Toast.LENGTH_SHORT).show();
+				view.clearAllData();
 				return;
 			}
 
@@ -97,10 +99,7 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 			SuggestionBean suggestion = jsonHelper.getSuggestion();
 
 			view.setData(hourlyWeathers, nowWeather, airQuality, dailyWeathers, suggestion);
-			if (nowWeather != null) {
-				view.updateWidget2_1(nowWeather);
-			}
-			view.setRefreshing(false);
+			view.updateWidget2_1(nowWeather);
 		}
 	}
 }

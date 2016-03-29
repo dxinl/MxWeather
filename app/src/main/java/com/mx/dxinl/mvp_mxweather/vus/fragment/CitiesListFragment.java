@@ -49,7 +49,7 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 
 		citiesList = (RecyclerView) view.findViewById(R.id.cities_list);
 		citiesList.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-		cities = presenter.getCitiesList("", type);
+		cities = presenter.getCitiesList("", type.equals("weather") ? "cities" : "attractions");
 		adapter = new CitiesListAdapter();
 		citiesList.setAdapter(adapter);
 	}
@@ -68,8 +68,8 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 	public void onClick(View v) {
 		int position = citiesList.getChildLayoutPosition(v);
 		String cityName = cities.get(position);
-		String cityNum = presenter.getCurrentCityNum(cityName);
-		((MainActivity) getActivity()).setCurrentCity(cityName, cityNum);
+		String cityNum = presenter.getCurrentCityNum(cityName, type);
+		((MainActivity) getActivity()).setCurrentCity(cityName, cityNum, type);
 	}
 
 	private final class CitiesListAdapter extends RecyclerView.Adapter<CitiesListHolder> {

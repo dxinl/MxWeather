@@ -1,7 +1,8 @@
 package com.mx.dxinl.mvp_mxweather.presenters.interfaces;
 
-import android.util.Pair;
 import android.view.MenuItem;
+
+import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 
 import java.util.List;
 
@@ -21,7 +22,9 @@ public interface MainPresenter {
 
 	String getCurrentCityName();
 
-	void setCurrentCity(String cityName, String cityNum);
+	String getCurrentCityType();
 
-	List<Pair<String, String>> getCitiesInfo(boolean isNeedUpdate);
+	void setCurrentCity(String cityName, String cityNum, String cityType);
+
+	List<CityInfo> getCitiesInfo(boolean isNeedUpdate);
 }

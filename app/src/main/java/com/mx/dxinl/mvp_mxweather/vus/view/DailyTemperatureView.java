@@ -3,6 +3,7 @@ package com.mx.dxinl.mvp_mxweather.vus.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -70,6 +71,9 @@ public class DailyTemperatureView extends View {
 		super.onDraw(canvas);
 
 		if (dailyWeathers == null || dailyWeathers.size() == 0) {
+			rectF.set(0, 0, getWidth(), getHeight());
+			paint.setColor(Color.WHITE);
+			canvas.drawRect(rectF, paint);
 			return;
 		}
 
@@ -164,6 +168,11 @@ public class DailyTemperatureView extends View {
 			}
 		}
 
+		invalidate();
+	}
+
+	public void clearData() {
+		dailyWeathers = null;
 		invalidate();
 	}
 

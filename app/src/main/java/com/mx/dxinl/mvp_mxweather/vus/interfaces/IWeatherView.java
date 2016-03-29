@@ -17,6 +17,8 @@ public interface IWeatherView {
 	void setData(List<HourlyWeatherBean> hourlyWeathers, NowWeatherBean nowWeather,
 	             AirQualityBean airQuality, List<DailyWeatherBean> dailyWeathers, SuggestionBean suggestion);
 
+	void clearAllData();
+
 	void setRefreshing(boolean isRefreshing);
 
 	void updateWidget2_1(NowWeatherBean nowWeatherBean);

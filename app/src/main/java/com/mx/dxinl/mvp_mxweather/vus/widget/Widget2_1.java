@@ -15,9 +15,18 @@ import android.graphics.RectF;
 import android.widget.RemoteViews;
 
 import com.mx.dxinl.mvp_mxweather.R;
+import com.mx.dxinl.mvp_mxweather.model.JSONHelper;
+import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
+import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.model.bean.NowWeatherBean;
 import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by DengXinliang on 2016/3/23.
@@ -25,6 +34,7 @@ import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
 public class Widget2_1 extends AppWidgetProvider {
 	public static final String REFRESH_ACTION = "com.mx.dxinl.mxweather.action.REFRESH";
 	private static final String APP_WIDGET_ID_STR = "appWidgetId";
+	private boolean isServiceRunning = false;
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
@@ -36,18 +46,36 @@ public class Widget2_1 extends AppWidgetProvider {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					RemoteViews remoteViews = new RemoteViews(
-							context.getPackageName(), R.layout.widget2_1);
-					Bitmap bitmap = getImageBitmap(context, nowWeather.code);
-					remoteViews.setImageViewBitmap(
-							R.id.weather_icon, drawWeatherIconForWidget(context, bitmap));
-					remoteViews.setTextViewText(R.id.temperature,
-							nowWeather.tmp + context.getResources().getString(R.string.tmp));
-					remoteViews.setTextViewText(R.id.city_name, cityName != null ? cityName : "");
-					setOnClickPendingIntent(context, remoteViews);
-
-					AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-					appWidgetManager.updateAppWidget(new ComponentName(context, Widget2_1.class), remoteViews);
+					makeRemoteViewsAndUpdate(context, nowWeather, cityName);
+				}
+			}).start();
+		} else {
+			final SharedPreferencesHelper spHelper = new SharedPreferencesHelper(context);
+			new Thread(new Runnable() {
+				@SuppressWarnings("TryWithIdenticalCatches")
+				@Override
+				public void run() {
+					String[] cityInfo = spHelper.getCurrentCityInfo();
+					if (cityInfo.length != 3) {
+						cityInfo = new String[] {"北京", "CN101010100", "weather"};
+					}
+					NowWeatherBean nowWeather = null;
+					try {
+						JSONObject jsonObject = NetworkHelper.get().getJSONFromNetwork(3000, cityInfo[1], cityInfo[2]);
+						if (jsonObject != null) {
+							JSONHelper jsonHelper = new JSONHelper(jsonObject);
+							if (jsonHelper.checkJSONObject()) {
+								nowWeather = jsonHelper.getNowWeather();
+							}
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					} catch (TimeoutException e) {
+						e.printStackTrace();
+					}
+					makeRemoteViewsAndUpdate(context, nowWeather, cityInfo[0]);
 				}
 			}).start();
 		}
@@ -66,6 +94,32 @@ public class Widget2_1 extends AppWidgetProvider {
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget2_1);
 		setOnClickPendingIntent(context, remoteViews);
 		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+	}
+
+	private void makeRemoteViewsAndUpdate(Context context, NowWeatherBean nowWeather, String cityName) {
+		RemoteViews remoteViews = makeRemoteViews(context, nowWeather, cityName);
+		setOnClickPendingIntent(context, remoteViews);
+
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		appWidgetManager.updateAppWidget(new ComponentName(context, Widget2_1.class), remoteViews);
+	}
+
+	private RemoteViews makeRemoteViews(Context context, NowWeatherBean nowWeather, String cityName) {
+		RemoteViews remoteViews = new RemoteViews(
+				context.getPackageName(), R.layout.widget2_1);
+
+		if (nowWeather == null) {
+			return remoteViews;
+		}
+
+		Bitmap bitmap = getImageBitmap(context, nowWeather.code);
+		remoteViews.setImageViewBitmap(
+				R.id.weather_icon, drawWeatherIconForWidget(context, bitmap));
+		remoteViews.setTextViewText(R.id.temperature,
+				nowWeather.tmp + context.getResources().getString(R.string.tmp));
+		remoteViews.setTextViewText(R.id.city_name, cityName != null ? cityName : "");
+
+		return remoteViews;
 	}
 
 	private void setOnClickPendingIntent(Context context, RemoteViews remoteViews) {

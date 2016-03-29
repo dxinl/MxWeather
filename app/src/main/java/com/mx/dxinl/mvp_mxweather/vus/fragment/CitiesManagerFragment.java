@@ -3,7 +3,6 @@ package com.mx.dxinl.mvp_mxweather.vus.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.mx.dxinl.mvp_mxweather.R;
+import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 import com.mx.dxinl.mvp_mxweather.presenters.impl.CitiesManagerPresenterImpl;
 import com.mx.dxinl.mvp_mxweather.presenters.interfaces.CitiesManagerPresenter;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
@@ -80,8 +80,8 @@ public class CitiesManagerFragment extends HasOptionsMenuFragment implements ICi
 
 		@Override
 		public void onBindViewHolder(ListHolder holder, int position) {
-			Pair<String, String> cityInfo = presenter.getCitiesListData(false).get(position);
-			String text = cityInfo.first + " - " + cityInfo.second;
+			CityInfo cityInfo = presenter.getCitiesListData(false).get(position);
+			String text = cityInfo.name + " - " + cityInfo.num;
 			holder.cityInfo.setText(text);
 
 			try {

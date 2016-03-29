@@ -30,10 +30,15 @@ public class DBQueryHelper {
 		return cities;
 	}
 
-	public static String queryCityNum(String city) {
+	public static String queryCityNum(String city, String type) {
 		SQLiteDatabase db = AssetsDatabaseHelper.getDB();
 		String cityNum = "";
-		String sql = "SELECT num FROM cities WHERE name=\"" + city + "\"";
+		String sql;
+		if (type.equals("weather")) {
+			sql = "SELECT num FROM cities WHERE name=\"" + city + "\"";
+		} else {
+			sql = "SELECT num FROM attractions WHERE name=\"" + city + "\"";
+		}
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToNext()) {
 			cityNum = cursor.getString(cursor.getColumnIndex("num"));

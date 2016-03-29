@@ -1,7 +1,8 @@
 package com.mx.dxinl.mvp_mxweather.presenters.interfaces;
 
-import android.util.Pair;
 import android.view.MenuItem;
+
+import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ import java.util.List;
  * Created by DengXinliang on 2016/3/14.
  */
 public interface CitiesManagerPresenter {
-	List<Pair<String, String>> getCitiesListData(boolean isNeedUpdate);
+	List<CityInfo> getCitiesListData(boolean isNeedUpdate);
 
-	List<Pair<String, String>> getSelectedCities();
+	List<CityInfo> getSelectedCities();
 
 	void onClickCity(int position);
 

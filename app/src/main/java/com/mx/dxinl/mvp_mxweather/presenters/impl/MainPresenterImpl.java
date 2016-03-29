@@ -3,12 +3,12 @@ package com.mx.dxinl.mvp_mxweather.presenters.impl;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
+import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 import com.mx.dxinl.mvp_mxweather.presenters.interfaces.MainPresenter;
 import com.mx.dxinl.mvp_mxweather.utils.AssetsDatabaseHelper;
 import com.mx.dxinl.mvp_mxweather.vus.fragment.CitiesManagerFragment;
@@ -25,7 +25,8 @@ public class MainPresenterImpl implements MainPresenter {
 
 	private String currentCityNum;
 	private String currentCityName;
-	private List<Pair<String, String>> citiesInfo;
+	private String currentCityType;
+	private List<CityInfo> citiesInfo;
 
 	private SharedPreferencesHelper spHelper;
 
@@ -38,15 +39,16 @@ public class MainPresenterImpl implements MainPresenter {
 		spHelper = new SharedPreferencesHelper(context);
 	}
 
-	private void setCurrentCityInfo(Pair<String, String> cityInfo) {
-		setCurrentCityInfo(cityInfo.first, cityInfo.second);
+	private void setCurrentCityType(CityInfo cityInfo) {
+		setCurrentCityInfo(cityInfo.name, cityInfo.num, cityInfo.type);
 	}
 
-	private void setCurrentCityInfo(String currentCityName, String currentCityNum) {
+	private void setCurrentCityInfo(String currentCityName, String currentCityNum, String cityType) {
 		this.currentCityNum = currentCityNum;
 		this.currentCityName = currentCityName;
+		this.currentCityType = cityType;
 
-		spHelper.setCurrentCityInfo(currentCityName, currentCityNum);
+		spHelper.setCurrentCityInfo(currentCityName, currentCityNum, cityType);
 	}
 
 	@Override
@@ -56,12 +58,13 @@ public class MainPresenterImpl implements MainPresenter {
 
 	@Override
 	public void getCurrentCityInfo() {
-		String[] nameOrNum = spHelper.getCurrentCityInfo();
-		if (nameOrNum == null) {
-			setCurrentCity("北京", "CN101010100");
+		String[] currentCityInfo = spHelper.getCurrentCityInfo();
+		if (currentCityInfo == null) {
+			setCurrentCity("北京", "CN101010100", "weather");
 		} else {
-			this.currentCityName = nameOrNum[0];
-			this.currentCityNum = nameOrNum[1];
+			this.currentCityName = currentCityInfo[0];
+			this.currentCityNum = currentCityInfo[1];
+			this.currentCityType = currentCityInfo[2];
 		}
 	}
 
@@ -76,15 +79,20 @@ public class MainPresenterImpl implements MainPresenter {
 	}
 
 	@Override
-	public void setCurrentCity(String cityName, String cityNum) {
-		spHelper.addChosenCity(cityName, cityNum);
-		setCurrentCityInfo(cityName, cityNum);
+	public String getCurrentCityType() {
+		return currentCityType;
+	}
+
+	@Override
+	public void setCurrentCity(String cityName, String cityNum, String cityType) {
+		spHelper.addChosenCity(cityName, cityNum, cityType);
+		setCurrentCityInfo(cityName, cityNum, cityType);
 		initNavigationMenu();
 		clearFragmentBackStack();
 	}
 
 	@Override
-	public List<Pair<String, String>> getCitiesInfo(boolean isNeedUpdate) {
+	public List<CityInfo> getCitiesInfo(boolean isNeedUpdate) {
 		if (citiesInfo == null || isNeedUpdate) {
 			citiesInfo = spHelper.getCitiesInfo();
 		}
@@ -96,11 +104,11 @@ public class MainPresenterImpl implements MainPresenter {
 		Menu menu = view.getNavigationMenu();
 		menu.removeGroup(BASE_ITEM_ID);
 
-		List<Pair<String, String>> citiesInfo = getCitiesInfo(true);
+		List<CityInfo> citiesInfo = getCitiesInfo(true);
 		int index = 1;
 		MenuItem checkedItem = null;
-		for (Pair<String, String> cityInfo : citiesInfo) {
-			menu.add(BASE_ITEM_ID, BASE_ITEM_ID + index, 1, cityInfo.first);
+		for (CityInfo cityInfo : citiesInfo) {
+			menu.add(BASE_ITEM_ID, BASE_ITEM_ID + index, 1, cityInfo.name);
 			MenuItem item = menu.findItem(BASE_ITEM_ID + index);
 			if (item.getTitle().equals(getCurrentCityName())) {
 				checkedItem = item;
@@ -113,7 +121,7 @@ public class MainPresenterImpl implements MainPresenter {
 			checkedItem.setChecked(true);
 		} else {
 			menu.findItem(BASE_ITEM_ID + 1).setChecked(true);
-			setCurrentCityInfo(citiesInfo.get(0));
+			setCurrentCityType(citiesInfo.get(0));
 		}
 	}
 
@@ -124,8 +132,8 @@ public class MainPresenterImpl implements MainPresenter {
 			int id = item.getItemId();
 			int index = id - BASE_ITEM_ID - 1;
 
-			Pair<String, String> currentCityInfo = getCitiesInfo(false).get(index);
-			setCurrentCityInfo(currentCityInfo.first, currentCityInfo.second);
+			CityInfo currentCityInfo = getCitiesInfo(false).get(index);
+			setCurrentCityInfo(currentCityInfo.name, currentCityInfo.num, currentCityInfo.type);
 			view.refreshFragment();
 
 			return;

@@ -2,11 +2,13 @@ package com.mx.dxinl.mvp_mxweather.vus.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +44,9 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 	private TextView humidity;
 	private TextView wind;
 	private TextView visibility;
+	private FrameLayout suggestion;
+	private FrameLayout dayIcons;
+	private FrameLayout nightIcons;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +71,11 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 		humidity = (TextView) view.findViewById(R.id.humidity);
 		wind = (TextView) view.findViewById(R.id.wind);
 		visibility = (TextView) view.findViewById(R.id.visibility);
+
+		suggestion = (FrameLayout) view.findViewById(R.id.suggestion);
+		dayIcons = (FrameLayout) view.findViewById(R.id.day_weather);
+		nightIcons = (FrameLayout) view.findViewById(R.id.night_weather);
+
 
 		swipeRefreshLayout.post(new Runnable() {
 			@Override
@@ -94,9 +104,11 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 	public void setDailyWeatherData(List<DailyWeatherBean> dailyWeathers) {
 		if (dailyWeathers != null) {
 			dailyTemperatureView.setData(dailyWeathers);
+			dayIcons.setVisibility(View.VISIBLE);
 			WeatherIconsFragment dayWeatherFragment = WeatherIconsFragment.newInstance(presenter, dailyWeathers);
 			getChildFragmentManager().beginTransaction().replace(R.id.day_weather, dayWeatherFragment).commitAllowingStateLoss();
 
+			nightIcons.setVisibility(View.VISIBLE);
 			WeatherIconsFragment nightWeatherFragment = WeatherIconsFragment.newInstance(presenter, dailyWeathers, true);
 			getChildFragmentManager().beginTransaction().replace(R.id.night_weather, nightWeatherFragment).commitAllowingStateLoss();
 		}
@@ -128,9 +140,10 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 		presenter.setImageBitmap(weatherIcon, code);
 	}
 
-	private void setSuggestion(SuggestionBean suggestion) {
-		if (suggestion != null) {
-			SuggestionFragment suggestionFragment = SuggestionFragment.newInstance(suggestion);
+	private void setSuggestion(SuggestionBean suggestionInfo) {
+		if (suggestionInfo != null) {
+			suggestion.setVisibility(View.VISIBLE);
+			SuggestionFragment suggestionFragment = SuggestionFragment.newInstance(suggestionInfo);
 			getChildFragmentManager().beginTransaction().replace(R.id.suggestion, suggestionFragment).commitAllowingStateLoss();
 		}
 	}
@@ -145,6 +158,24 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			setAirQuality(airQuality);
 			setSuggestion(suggestion);
 		}
+	}
+
+	@Override
+	public void clearAllData() {
+		hourlyWeatherView.clearData();
+		dailyTemperatureView.clearData();
+
+		weatherIcon.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+		weatherDesc.setText("");
+		temperature.setText("");
+		airQuality.setText("");
+		humidity.setText("");
+		wind.setText("");
+		visibility.setText("");
+
+		suggestion.setVisibility(View.INVISIBLE);
+		dayIcons.setVisibility(View.INVISIBLE);
+		nightIcons.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -164,7 +195,7 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 	@Override
 	public void onRefresh() {
 		cancelGetWeatherTask();
-		presenter.showData(((MainActivity) getActivity()).getCurrentCityNum());
+		presenter.showData(((MainActivity) getActivity()).getCurrentCityNum(), ((MainActivity) getActivity()).getCurrentCityType());
 		getActivity().setTitle(((MainActivity) getActivity()).getCurrentCityName());
 	}
 }

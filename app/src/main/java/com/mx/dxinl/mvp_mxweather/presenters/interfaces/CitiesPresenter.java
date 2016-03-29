@@ -8,5 +8,5 @@ import java.util.List;
 public interface CitiesPresenter {
 	List<String> getCitiesList(String str, String type);
 
-	String getCurrentCityNum(String city);
+	String getCurrentCityNum(String city, String type);
 }
