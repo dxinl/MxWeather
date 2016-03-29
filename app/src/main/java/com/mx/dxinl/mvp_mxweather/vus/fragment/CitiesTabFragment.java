@@ -1,5 +1,6 @@
 package com.mx.dxinl.mvp_mxweather.vus.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.vus.base.HasOptionsMenuFragment;
@@ -70,11 +72,11 @@ public class CitiesTabFragment extends HasOptionsMenuFragment {
 		inflater.inflate(R.menu.fragment_cities_tab, menu);
 
 		MenuItem searchItem = menu.findItem(R.id.action_search);
-		SearchView searchView = null;
-		if (searchItem != null) {
-			searchView = (SearchView) searchItem.getActionView();
+		if (searchItem == null) {
+			return;
 		}
 
+		final SearchView searchView = (SearchView) searchItem.getActionView();
 		if (searchView != null) {
 			searchView.setQueryHint(getString(R.string.search_hint));
 			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -87,6 +89,8 @@ public class CitiesTabFragment extends HasOptionsMenuFragment {
 				@Override
 				public boolean onQueryTextChange(String newText) {
 					setCitiesList(newText);
+					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 					return true;
 				}
 			});

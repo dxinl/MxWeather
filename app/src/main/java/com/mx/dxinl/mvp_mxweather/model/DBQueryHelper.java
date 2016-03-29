@@ -17,7 +17,7 @@ public class DBQueryHelper {
 		SQLiteDatabase db = AssetsDatabaseHelper.getDB();
 		List<String> cities = new ArrayList<>();
 		String sql;
-		if (type != null && type.equals("cities")) {
+		if (type != null && type.equals("weather")) {
 			sql = "SELECT name FROM cities WHERE enname like \"%" + str + "%\" or name like \"%" + str + "%\" ORDER BY enname";
 		} else {
 			sql = "SELECT name FROM attractions WHERE name like \"%" + str + "%\" ORDER BY province";
@@ -34,23 +34,12 @@ public class DBQueryHelper {
 		SQLiteDatabase db = AssetsDatabaseHelper.getDB();
 		String cityNum = "";
 		String sql;
-		if (type.equals("weather")) {
+		if (type != null && type.equals("weather")) {
 			sql = "SELECT num FROM cities WHERE name=\"" + city + "\"";
 		} else {
 			sql = "SELECT num FROM attractions WHERE name=\"" + city + "\"";
 		}
 		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToNext()) {
-			cityNum = cursor.getString(cursor.getColumnIndex("num"));
-		}
-		cursor.close();
-
-		if (!TextUtils.isEmpty(cityNum)) {
-			return cityNum;
-		}
-
-		sql = "SELECT num FROM cities WHERE name=\"" + city + "\"";
-		cursor = db.rawQuery(sql, null);
 		if (cursor.moveToNext()) {
 			cityNum = cursor.getString(cursor.getColumnIndex("num"));
 		}

@@ -1,5 +1,6 @@
 package com.mx.dxinl.mvp_mxweather.vus.widget;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -19,6 +20,7 @@ import com.mx.dxinl.mvp_mxweather.model.JSONHelper;
 import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
 import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.model.bean.NowWeatherBean;
+import com.mx.dxinl.mvp_mxweather.sevis.UpdateWidgetService;
 import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
 
@@ -26,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -49,9 +52,17 @@ public class Widget2_1 extends AppWidgetProvider {
 					makeRemoteViewsAndUpdate(context, nowWeather, cityName);
 				}
 			}).start();
-		} else {
-			final SharedPreferencesHelper spHelper = new SharedPreferencesHelper(context);
-			new Thread(new Runnable() {
+		} else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
+			Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
+			// start Activity by ourselves because pendingIntent may be slowly.
+			context.startService(serviceIntent);
+			PendingIntent servicePendingIntent = PendingIntent.getService(context, 0, serviceIntent, 0);
+
+			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+					Calendar.getInstance().getTimeInMillis(), 60 * 60 * 1000, servicePendingIntent);
+
+			/*new Thread(new Runnable() {
 				@SuppressWarnings("TryWithIdenticalCatches")
 				@Override
 				public void run() {
@@ -77,7 +88,7 @@ public class Widget2_1 extends AppWidgetProvider {
 					}
 					makeRemoteViewsAndUpdate(context, nowWeather, cityInfo[0]);
 				}
-			}).start();
+			}).start();*/
 		}
 	}
 

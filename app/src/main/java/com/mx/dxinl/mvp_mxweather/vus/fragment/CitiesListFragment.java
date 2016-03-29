@@ -49,7 +49,7 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 
 		citiesList = (RecyclerView) view.findViewById(R.id.cities_list);
 		citiesList.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-		cities = presenter.getCitiesList("", type.equals("weather") ? "cities" : "attractions");
+		cities = presenter.getCitiesList("", type);
 		adapter = new CitiesListAdapter();
 		citiesList.setAdapter(adapter);
 	}

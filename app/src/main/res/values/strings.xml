@@ -48,4 +48,15 @@
 	<string name="suggestion_fluent">感冒指数</string>
 	<string name="suggestion_sport">运动指数</string>
 	<string name="suggestion_travel">旅游指数</string>
+
+	<string name="choice">请选择</string>
+	<string name="widget_preferences">桌面小工具</string>
+	<string name="choice_repeat_time">桌面小部件更新间隔</string>
+	<string-array name="update_widget_repeat_time">
+		<item>30分钟</item>
+		<item>1小时</item>
+		<item>2小时</item>
+		<item>5小时</item>
+		<item>12小时</item>
+	</string-array>
 </resources>
