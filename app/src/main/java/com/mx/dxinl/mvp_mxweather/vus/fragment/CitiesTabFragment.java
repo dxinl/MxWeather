@@ -83,14 +83,14 @@ public class CitiesTabFragment extends HasOptionsMenuFragment {
 				@Override
 				public boolean onQueryTextSubmit(String query) {
 					setCitiesList(query);
+					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 					return true;
 				}
 
 				@Override
 				public boolean onQueryTextChange(String newText) {
 					setCitiesList(newText);
-					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 					return true;
 				}
 			});
