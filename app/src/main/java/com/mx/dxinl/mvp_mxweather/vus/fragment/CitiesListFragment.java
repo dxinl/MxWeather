@@ -34,6 +34,7 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 		CitiesListFragment fragment = new CitiesListFragment();
 		fragment.setArguments(args);
 		fragment.type = type;
+		fragment.presenter = new CitiesPresenterImpl();
 		return fragment;
 	}
 
@@ -45,7 +46,6 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		presenter = new CitiesPresenterImpl();
 
 		citiesList = (RecyclerView) view.findViewById(R.id.cities_list);
 		citiesList.setLayoutManager(new GridLayoutManager(getActivity(), 3));

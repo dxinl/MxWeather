@@ -27,7 +27,8 @@
 		</activity>
 
 		<receiver
-			android:name=".vus.widget.Widget2_1">
+			android:name=".vus.widget.Widget2_1"
+			android:process=":remote">
 			<meta-data
 				android:name="android.appwidget.provider"
 				android:resource="@xml/appwidget_provider2_1">

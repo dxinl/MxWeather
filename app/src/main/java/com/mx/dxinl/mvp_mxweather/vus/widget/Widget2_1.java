@@ -16,20 +16,12 @@ import android.graphics.RectF;
 import android.widget.RemoteViews;
 
 import com.mx.dxinl.mvp_mxweather.R;
-import com.mx.dxinl.mvp_mxweather.model.JSONHelper;
-import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
-import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.model.bean.NowWeatherBean;
 import com.mx.dxinl.mvp_mxweather.sevis.UpdateWidgetService;
 import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by DengXinliang on 2016/3/23.
@@ -61,34 +53,6 @@ public class Widget2_1 extends AppWidgetProvider {
 			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
 					Calendar.getInstance().getTimeInMillis(), 60 * 60 * 1000, servicePendingIntent);
-
-			/*new Thread(new Runnable() {
-				@SuppressWarnings("TryWithIdenticalCatches")
-				@Override
-				public void run() {
-					String[] cityInfo = spHelper.getCurrentCityInfo();
-					if (cityInfo.length != 3) {
-						cityInfo = new String[] {"北京", "CN101010100", "weather"};
-					}
-					NowWeatherBean nowWeather = null;
-					try {
-						JSONObject jsonObject = NetworkHelper.get().getJSONFromNetwork(3000, cityInfo[1], cityInfo[2]);
-						if (jsonObject != null) {
-							JSONHelper jsonHelper = new JSONHelper(jsonObject);
-							if (jsonHelper.checkJSONObject()) {
-								nowWeather = jsonHelper.getNowWeather();
-							}
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					} catch (TimeoutException e) {
-						e.printStackTrace();
-					}
-					makeRemoteViewsAndUpdate(context, nowWeather, cityInfo[0]);
-				}
-			}).start();*/
 		}
 	}
 
