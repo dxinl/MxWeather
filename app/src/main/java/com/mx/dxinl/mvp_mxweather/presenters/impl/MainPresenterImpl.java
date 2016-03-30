@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
@@ -85,6 +86,7 @@ public class MainPresenterImpl implements MainPresenter {
 
 	@Override
 	public void setCurrentCity(String cityName, String cityNum, String cityType) {
+		view.hideSoftInputMethod();
 		spHelper.addChosenCity(cityName, cityNum, cityType);
 		setCurrentCityInfo(cityName, cityNum, cityType);
 		initNavigationMenu();

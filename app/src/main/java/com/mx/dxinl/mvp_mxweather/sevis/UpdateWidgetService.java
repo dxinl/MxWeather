@@ -32,39 +32,50 @@ public class UpdateWidgetService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.e(this.getClass().getSimpleName(), String.valueOf(Calendar.getInstance().getTimeInMillis()));
-		final SharedPreferencesHelper spHelper = new SharedPreferencesHelper(this);
 		new Thread(new Runnable() {
-			@SuppressWarnings("TryWithIdenticalCatches")
 			@Override
 			public void run() {
-				String[] cityInfo = spHelper.getCurrentCityInfo();
-				if (cityInfo == null || cityInfo.length != 3) {
-					cityInfo = new String[] {"北京", "CN101010100", "weather"};
-				}
-				NowWeatherBean nowWeather = null;
-				try {
-					JSONObject jsonObject = NetworkHelper.get().getJSONFromNetwork(3000, cityInfo[1], cityInfo[2]);
-					if (jsonObject != null) {
-						JSONHelper jsonHelper = new JSONHelper(jsonObject);
-						if (jsonHelper.checkJSONObject()) {
-							nowWeather = jsonHelper.getNowWeather();
-						}
+				//noinspection InfiniteLoopStatement
+				while (true) {
+					System.out.println("UpdateWidgetService:" + String.valueOf(Calendar.getInstance().getTimeInMillis()));
+					getDataAndUpdateWidget();
+					try {
+						Thread.sleep(60 * 60 * 1000);
+					} catch (InterruptedException ignored) {
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (JSONException e) {
-					e.printStackTrace();
-				} catch (TimeoutException e) {
-					e.printStackTrace();
 				}
-				Intent intent = new Intent();
-				intent.setAction(Widget2_1.REFRESH_ACTION);
-				intent.putExtra("NowWeather", nowWeather);
-				intent.putExtra("CurrentCity", cityInfo[0]);
-				sendBroadcast(intent);
 			}
 		}).start();
-		return 1;
+		return START_REDELIVER_INTENT;
+	}
+
+	@SuppressWarnings("TryWithIdenticalCatches")
+	private void getDataAndUpdateWidget() {
+		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(this);
+		String[] cityInfo = spHelper.getCurrentCityInfo();
+		if (cityInfo == null || cityInfo.length != 3) {
+			cityInfo = new String[] {"北京", "CN101010100", "weather"};
+		}
+		NowWeatherBean nowWeather = null;
+		try {
+			JSONObject jsonObject = NetworkHelper.get().getJSONFromNetwork(3000, cityInfo[1], cityInfo[2]);
+			if (jsonObject != null) {
+				JSONHelper jsonHelper = new JSONHelper(jsonObject);
+				if (jsonHelper.checkJSONObject()) {
+					nowWeather = jsonHelper.getNowWeather();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		Intent intent = new Intent();
+		intent.setAction(Widget2_1.REFRESH_ACTION);
+		intent.putExtra("NowWeather", nowWeather);
+		intent.putExtra("CurrentCity", cityInfo[0]);
+		sendBroadcast(intent);
 	}
 }

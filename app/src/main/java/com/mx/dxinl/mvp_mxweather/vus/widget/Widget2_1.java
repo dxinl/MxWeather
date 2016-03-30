@@ -46,13 +46,7 @@ public class Widget2_1 extends AppWidgetProvider {
 			}).start();
 		} else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
 			Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
-			// start Activity by ourselves because pendingIntent may be slowly.
 			context.startService(serviceIntent);
-			PendingIntent servicePendingIntent = PendingIntent.getService(context, 0, serviceIntent, 0);
-
-			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-					Calendar.getInstance().getTimeInMillis(), 60 * 60 * 1000, servicePendingIntent);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.mx.dxinl.mvp_mxweather.vus;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.mx.dxinl.mvp_mxweather.R;
@@ -138,6 +140,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	@Override
+	public void hideSoftInputMethod() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(navigationView.getWindowToken(), 0);
 	}
 
 	@Override
