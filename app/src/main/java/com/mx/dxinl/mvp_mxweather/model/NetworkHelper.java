@@ -50,6 +50,8 @@ public class NetworkHelper {
 		if (DEBUG) {
 			System.out.println(sbd.toString());
 		}
+		reader.close();
+		is.close();
 		return new JSONObject(sbd.toString());
 	}
 
@@ -68,7 +70,9 @@ public class NetworkHelper {
 
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inSampleSize = sampleSize;
-		return BitmapFactory.decodeStream(is, null, options);
+		Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+		is.close();
+		return bitmap;
 	}
 
 	private InputStream getInputStreamFromNetwork(int timeOut, String urlStr) throws IOException {

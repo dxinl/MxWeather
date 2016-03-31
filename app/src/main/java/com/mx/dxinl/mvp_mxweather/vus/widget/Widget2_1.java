@@ -36,6 +36,7 @@ public class Widget2_1 extends AppWidgetProvider {
 				@Override
 				public void run() {
 					makeRemoteViewsAndUpdate(context, nowWeather, cityName);
+					System.gc();
 				}
 			}).start();
 		}
