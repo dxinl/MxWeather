@@ -5,15 +5,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 import com.mx.dxinl.mvp_mxweather.presenters.interfaces.MainPresenter;
 import com.mx.dxinl.mvp_mxweather.utils.AssetsDatabaseHelper;
+import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
 import com.mx.dxinl.mvp_mxweather.vus.fragment.CitiesManagerFragment;
 import com.mx.dxinl.mvp_mxweather.vus.fragment.CitiesTabFragment;
+import com.mx.dxinl.mvp_mxweather.vus.fragment.SettingsFragment;
 import com.mx.dxinl.mvp_mxweather.vus.interfaces.IMainView;
 
 import java.util.List;
@@ -102,6 +104,11 @@ public class MainPresenterImpl implements MainPresenter {
 	}
 
 	@Override
+	public void setImageBitmap(ImageView view, String code) {
+		ImageLoader.get().setImageBitmap(view, code, true);
+	}
+
+	@Override
 	public void initNavigationMenu() {
 		Menu menu = view.getNavigationMenu();
 		menu.removeGroup(BASE_ITEM_ID);
@@ -183,6 +190,21 @@ public class MainPresenterImpl implements MainPresenter {
 				break;
 
 			case R.id.setting:
+				for (int i = fm.getBackStackEntryCount() - 1; i >= 0; i--) {
+					if (fm.getBackStackEntryAt(i).getName().equals("settings")) {
+						fm.popBackStackImmediate("settings", 0);
+						isFoundFragment = true;
+						break;
+					}
+				}
+
+				if (!isFoundFragment) {
+					SettingsFragment settingsFragment = new SettingsFragment();
+					FragmentTransaction transaction = view.getIViewFragmentManager().beginTransaction();
+					transaction.replace(R.id.content_panel, settingsFragment);
+					transaction.addToBackStack("settings");
+					transaction.commit();
+				}
 				break;
 		}
 	}

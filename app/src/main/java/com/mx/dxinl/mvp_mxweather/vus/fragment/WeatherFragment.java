@@ -157,6 +157,7 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			setNowWeather(nowWeather);
 			setAirQuality(airQuality);
 			setSuggestion(suggestion);
+			((MainActivity) getActivity()).updateNavHeader(nowWeather.code);
 		}
 	}
 

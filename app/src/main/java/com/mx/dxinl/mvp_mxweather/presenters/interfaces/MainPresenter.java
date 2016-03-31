@@ -1,6 +1,7 @@
 package com.mx.dxinl.mvp_mxweather.presenters.interfaces;
 
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
 
@@ -13,6 +14,8 @@ public interface MainPresenter {
 	boolean processDB();
 
 	void getCurrentCityInfo();
+
+	void setImageBitmap(ImageView view, String code);
 
 	void initNavigationMenu();
 

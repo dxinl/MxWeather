@@ -13,6 +13,7 @@
 
 	<dimen name="normal_txt_size">14sp</dimen>
 	<dimen name="large_txt_size">16sp</dimen>
+	<dimen name="great_large_txt_size">20sp</dimen>
 	<dimen name="widget_txt_size">64sp</dimen>
 	<dimen name="temperature_size">128sp</dimen>
 

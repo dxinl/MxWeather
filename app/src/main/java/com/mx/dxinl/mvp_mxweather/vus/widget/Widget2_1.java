@@ -1,6 +1,5 @@
 package com.mx.dxinl.mvp_mxweather.vus.widget;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -9,19 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.widget.RemoteViews;
 
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.bean.NowWeatherBean;
 import com.mx.dxinl.mvp_mxweather.sevis.UpdateWidgetService;
 import com.mx.dxinl.mvp_mxweather.utils.ImageLoader;
+import com.mx.dxinl.mvp_mxweather.utils.OtherUtils;
 import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
-
-import java.util.Calendar;
 
 /**
  * Created by DengXinliang on 2016/3/23.
@@ -44,10 +38,10 @@ public class Widget2_1 extends AppWidgetProvider {
 					makeRemoteViewsAndUpdate(context, nowWeather, cityName);
 				}
 			}).start();
-		} else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
-			Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
-			context.startService(serviceIntent);
 		}
+
+		Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
+		context.startService(serviceIntent);
 	}
 
 	@Override
@@ -83,7 +77,7 @@ public class Widget2_1 extends AppWidgetProvider {
 
 		Bitmap bitmap = getImageBitmap(context, nowWeather.code);
 		remoteViews.setImageViewBitmap(
-				R.id.weather_icon, drawWeatherIconForWidget(context, bitmap));
+				R.id.weather_icon, OtherUtils.drawWeatherIconWithCircleBkg(context, bitmap));
 		remoteViews.setTextViewText(R.id.temperature,
 				nowWeather.tmp + context.getResources().getString(R.string.tmp));
 		remoteViews.setTextViewText(R.id.city_name, cityName != null ? cityName : "");
@@ -103,29 +97,5 @@ public class Widget2_1 extends AppWidgetProvider {
 			return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
 		}
 		return bitmap;
-	}
-
-	public Bitmap drawWeatherIconForWidget(Context context, Bitmap bitmap) {
-		try {
-			Bitmap bkgBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.transparent_circle_bkg_white);
-			int width = bkgBmp.getWidth();
-			int height = bkgBmp.getHeight();
-			int padding = context.getResources().getDimensionPixelSize(R.dimen.small_padding);
-			Bitmap tmpBmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-			Canvas canvas = new Canvas(tmpBmp);
-
-			Paint paint = new Paint();
-			paint.setAntiAlias(true);
-			paint.setFilterBitmap(true);
-			paint.setDither(true);
-
-			canvas.drawBitmap(bkgBmp, 0, 0, paint);
-			canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
-					new RectF(padding, padding, width - padding, height - padding), paint);
-			return tmpBmp;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return bitmap;
-		}
 	}
 }

@@ -51,7 +51,7 @@
 
 	<string name="choice">请选择</string>
 	<string name="widget_preferences">桌面小工具</string>
-	<string name="choice_repeat_time">桌面小部件更新间隔</string>
+	<string name="choice_repeat_time">更新间隔</string>
 	<string-array name="update_widget_repeat_time">
 		<item>30分钟</item>
 		<item>1小时</item>

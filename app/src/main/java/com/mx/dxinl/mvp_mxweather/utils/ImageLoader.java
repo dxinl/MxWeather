@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.ImageView;
 
 import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
@@ -25,9 +26,9 @@ import java.util.concurrent.TimeoutException;
 public class ImageLoader {
 	private static final int MAX_SIZE = 1;
 	private static ImageLoader INSTANCE = null;
-	private final String SDCARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-	private final String IMAGE_PATH = "MxWeather" + File.separator + "Image";
-	private final String IMG_SUFFIX = ".png";
+	private final String SDCARD_PATH    = Environment.getExternalStorageDirectory().getAbsolutePath();
+	private final String IMAGE_PATH     = "MxWeather" + File.separator + "Image";
+	private final String IMG_SUFFIX     = ".png";
 
 	private final HashMap<String, AsyncTask<Object, Object, Bitmap>> taskList = new HashMap<>();
 	private LinkedHashMap<String, Bitmap> bitmapCache;
@@ -46,19 +47,30 @@ public class ImageLoader {
 	}
 
 	public void setImageBitmap(ImageView view, String code) {
+		setImageBitmap(view, code, false);
+	}
+
+	public void setImageBitmap(ImageView view, String code, boolean isNeedDrawBkg) {
 		Bitmap bitmap = getBitmapFromMemory(code);
 		if (bitmap != null) {
-			view.setImageBitmap(bitmap);
+			setImageBitmap(view, bitmap, isNeedDrawBkg);
 			return;
 		}
 
 		bitmap = getBitmapFromDisk(code);
 		if (bitmap != null) {
-			view.setImageBitmap(bitmap);
+			setImageBitmap(view, bitmap, isNeedDrawBkg);
 			return;
 		}
 
-		setBitmapFromNetwork(view, code);
+		setBitmapFromNetwork(view, code, isNeedDrawBkg);
+	}
+
+	private void setImageBitmap(ImageView view, Bitmap bitmap, boolean isNeedDrawBkg) {
+		if (isNeedDrawBkg) {
+			bitmap = OtherUtils.drawWeatherIconWithCircleBkg(view.getContext(), bitmap);
+		}
+		view.setImageBitmap(bitmap);
 	}
 
 	public Bitmap getImageBitmap(String code) {
@@ -107,14 +119,14 @@ public class ImageLoader {
 		return null;
 	}
 
-	private synchronized void setBitmapFromNetwork(ImageView view, String code) {
+	private synchronized void setBitmapFromNetwork(ImageView view, String code, boolean isNeedDrawBkg) {
 		if (taskList.get(code) == null) {
 			NetworkImageLoaderTask task = new NetworkImageLoaderTask(code);
-			task.addView(view);
+			task.addView(view, isNeedDrawBkg);
 			task.execute();
 			taskList.put(code, task);
 		} else {
-			((NetworkImageLoaderTask) taskList.get(code)).addView(view);
+			((NetworkImageLoaderTask) taskList.get(code)).addView(view, isNeedDrawBkg);
 		}
 	}
 
@@ -142,6 +154,9 @@ public class ImageLoader {
 		return bitmap.getRowBytes() * bitmap.getHeight();
 	}
 
+	/**
+	 * This method must be used in background thread.
+	 */
 	private Bitmap getBitmapFromNetwork(String code) {
 		try {
 			Bitmap bitmap = NetworkHelper.get().getBitmapFromNetwork(30000, code);
@@ -187,16 +202,16 @@ public class ImageLoader {
 	}
 
 	private final class NetworkImageLoaderTask extends AsyncTask<Object, Object, Bitmap> {
-		private final List<ImageView> viewList = new ArrayList<>();
+		private final List<Pair<ImageView, Boolean>> viewList = new ArrayList<>();
 		private String code;
 
 		public NetworkImageLoaderTask(String code) {
 			this.code = code;
 		}
 
-		public void addView(ImageView view) {
+		public void addView(ImageView view, boolean isNeedDrawBkg) {
 			synchronized (ImageLoader.this) {
-				viewList.add(view);
+				viewList.add(new Pair<>(view, isNeedDrawBkg));
 			}
 		}
 
@@ -209,12 +224,12 @@ public class ImageLoader {
 		protected void onPostExecute(Bitmap bitmap) {
 			synchronized (ImageLoader.this) {
 				if (bitmap != null) {
-					for (ImageView view : viewList) {
-						if (view == null) {
+					for (Pair<ImageView, Boolean> viewPair : viewList) {
+						if (viewPair == null) {
 							continue;
 						}
 
-						view.setImageBitmap(bitmap);
+						setImageBitmap(viewPair.first, bitmap, viewPair.second);
 					}
 				} else {
 					Log.e(ImageLoader.class.getSimpleName(), "Cannot Get Img From Network.");

@@ -39,7 +39,9 @@
 			</intent-filter>
 		</receiver>
 
-		<service android:name=".sevis.UpdateWidgetService" android:process=":update_timer"/>
+		<service
+			android:name=".sevis.UpdateWidgetService"
+			android:process=":update_timer"/>
 	</application>
 
 </manifest>

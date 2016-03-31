@@ -18,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mx.dxinl.mvp_mxweather.R;
@@ -187,5 +189,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 	public void invalidateNavigationMenu() {
 		presenter.initNavigationMenu();
+	}
+
+	public void updateNavHeader(String code) {
+		ImageView weatherIcon = (ImageView) navigationView.findViewById(R.id.weather_icon);
+		presenter.setImageBitmap(weatherIcon, code);
+
+		TextView cityName = (TextView) navigationView.findViewById(R.id.city_name);
+		cityName.setText(getCurrentCityName());
 	}
 }
