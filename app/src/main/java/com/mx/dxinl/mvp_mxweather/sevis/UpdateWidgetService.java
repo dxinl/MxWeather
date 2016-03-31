@@ -42,7 +42,7 @@ public class UpdateWidgetService extends Service {
 						getDataAndUpdateWidget();
 						System.gc();
 						try {
-							Thread.sleep(30 * 60 * 1000);
+							Thread.sleep(120 * 60 * 1000);
 						} catch (InterruptedException ignored) {
 						}
 					}
