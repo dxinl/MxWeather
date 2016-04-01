@@ -40,10 +40,10 @@ public class CitiesTabFragment extends HasOptionsMenuFragment {
 		pager = (ViewPager) view.findViewById(R.id.pager);
 
 		CitiesListFragment citiesFragment = CitiesListFragment.newInstance("weather");
-		CitiesListFragment attractionsFragment = CitiesListFragment.newInstance("attractions");
+		// CitiesListFragment attractionsFragment = CitiesListFragment.newInstance("attractions");
 
-		fragments = new CitiesListFragment[] {citiesFragment, attractionsFragment};
-		final String[] titles = new String[] {getString(R.string.cities), getString(R.string.attractions)};
+		fragments = new CitiesListFragment[] {citiesFragment/*, attractionsFragment*/};
+		final String[] titles = new String[] {getString(R.string.cities)/*, getString(R.string.attractions)*/};
 
 		adapter = new FragmentPagerAdapter(getChildFragmentManager()) {
 			@Override
@@ -65,6 +65,7 @@ public class CitiesTabFragment extends HasOptionsMenuFragment {
 
 		SlidingTabLayout tabLayout = (SlidingTabLayout) view.findViewById(R.id.pager_title_strip);
 		tabLayout.setViewPager(pager);
+		tabLayout.setVisibility(View.GONE);
 	}
 
 	@Override
