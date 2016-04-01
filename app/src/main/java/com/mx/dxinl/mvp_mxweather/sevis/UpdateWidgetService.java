@@ -9,6 +9,7 @@ import com.mx.dxinl.mvp_mxweather.model.JSONHelper;
 import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
 import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.model.bean.NowWeatherBean;
+import com.mx.dxinl.mvp_mxweather.utils.OtherUtils;
 import com.mx.dxinl.mvp_mxweather.vus.widget.Widget2_1;
 
 import org.json.JSONException;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class UpdateWidgetService extends Service {
 	private Thread updateWidgetThread;
+	private volatile boolean stopThread;
 
 	@Nullable
 	@Override
@@ -36,15 +38,15 @@ public class UpdateWidgetService extends Service {
 			updateWidgetThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					//noinspection InfiniteLoopStatement
-					while (true) {
-						System.out.println("UpdateWidgetService:" + String.valueOf(Calendar.getInstance().getTimeInMillis()));
-						getDataAndUpdateWidget();
-						System.gc();
+					while (!stopThread) {
 						try {
 							Thread.sleep(120 * 60 * 1000);
 						} catch (InterruptedException ignored) {
 						}
+
+						System.out.println("UpdateWidgetService:" + String.valueOf(Calendar.getInstance().getTimeInMillis()));
+						getDataAndUpdateWidget();
+						System.gc();
 					}
 				}
 			});
@@ -58,11 +60,16 @@ public class UpdateWidgetService extends Service {
 		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(this);
 		String[] cityInfo = spHelper.getCurrentCityInfo();
 		if (cityInfo == null || cityInfo.length != 3) {
-			cityInfo = new String[] {"北京", "CN101010100", "weather"};
+			cityInfo = new String[]{"北京", "CN101010100", "weather"};
 		}
 		NowWeatherBean nowWeather = null;
 		try {
-			JSONObject jsonObject = NetworkHelper.get().getJSONFromNetwork(3000, cityInfo[1], cityInfo[2]);
+			JSONObject jsonObject;
+			if (!OtherUtils.isDebug()) {
+				jsonObject = NetworkHelper.get().getJSONFromNetwork(3000, cityInfo[1], cityInfo[2]);
+			} else {
+				jsonObject = NetworkHelper.get().getJSON();
+			}
 			if (jsonObject != null) {
 				JSONHelper jsonHelper = new JSONHelper(jsonObject);
 				if (jsonHelper.checkJSONObject()) {
@@ -81,5 +88,12 @@ public class UpdateWidgetService extends Service {
 		intent.putExtra("NowWeather", nowWeather);
 		intent.putExtra("CurrentCity", cityInfo[0]);
 		sendBroadcast(intent);
+	}
+
+	@Override
+	public boolean stopService(Intent name) {
+		stopThread = true;
+		updateWidgetThread = null;
+		return super.stopService(name);
 	}
 }
