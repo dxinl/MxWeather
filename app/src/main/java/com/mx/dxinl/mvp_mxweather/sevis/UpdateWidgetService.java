@@ -3,6 +3,7 @@ package com.mx.dxinl.mvp_mxweather.sevis;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 
 import com.mx.dxinl.mvp_mxweather.model.JSONHelper;
@@ -23,8 +24,7 @@ import java.util.concurrent.TimeoutException;
  * Created by dxinl on 2016/3/29.
  */
 public class UpdateWidgetService extends Service {
-	private Thread updateWidgetThread;
-	private volatile boolean stopThread;
+	private UpdateWidgetThread updateWidgetThread;
 
 	@Nullable
 	@Override
@@ -35,21 +35,7 @@ public class UpdateWidgetService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (updateWidgetThread == null || !updateWidgetThread.isAlive()) {
-			updateWidgetThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					while (!stopThread) {
-						try {
-							Thread.sleep(120 * 60 * 1000);
-						} catch (InterruptedException ignored) {
-						}
-
-						System.out.println("UpdateWidgetService:" + String.valueOf(Calendar.getInstance().getTimeInMillis()));
-						getDataAndUpdateWidget();
-						System.gc();
-					}
-				}
-			});
+			updateWidgetThread = new UpdateWidgetThread();
 			updateWidgetThread.start();
 		}
 		return START_REDELIVER_INTENT;
@@ -91,9 +77,32 @@ public class UpdateWidgetService extends Service {
 	}
 
 	@Override
-	public boolean stopService(Intent name) {
-		stopThread = true;
+	public void onDestroy() {
+		updateWidgetThread.stopThread();
 		updateWidgetThread = null;
-		return super.stopService(name);
+		super.onDestroy();
+	}
+
+	private final class UpdateWidgetThread extends Thread {
+		private volatile boolean stopThread = false;
+
+		@Override
+		public void run() {
+			while (!stopThread) {
+				if (OtherUtils.isDebug()) {
+					SystemClock.sleep(1000);
+				} else {
+					SystemClock.sleep(120 * 60 * 1000);
+				}
+
+				System.out.println("UpdateWidgetService:" + String.valueOf(Calendar.getInstance().getTimeInMillis()));
+				getDataAndUpdateWidget();
+				System.gc();
+			}
+		}
+
+		public void stopThread() {
+			stopThread = true;
+		}
 	}
 }

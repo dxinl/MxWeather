@@ -2,6 +2,7 @@ package com.mx.dxinl.mvp_mxweather.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -334,7 +335,7 @@ public class NetworkHelper {
 				"        \"hum\": \"78\",\n" +
 				"        \"pcpn\": \"0\",\n" +
 				"        \"pres\": \"1014\",\n" +
-				"        \"tmp\": \"22\",\n" +
+				"        \"tmp\": \" " + (System.currentTimeMillis() / 1000 % 2 == 0 ? 22 : 18) + "\",\n" +
 				"        \"vis\": \"1\",\n" +
 				"        \"wind\": {\n" +
 				"          \"deg\": \"100\",\n" +

@@ -41,7 +41,7 @@
 
 		<service
 			android:name=".sevis.UpdateWidgetService"
-			android:process=":update_timer"/>
+			android:process=":update"/>
 	</application>
 
 </manifest>

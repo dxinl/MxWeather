@@ -47,7 +47,6 @@ public class Widget2_1 extends AppWidgetProvider {
 				}
 			}).start();
 		} else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
-			// update widget manually
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -61,14 +60,16 @@ public class Widget2_1 extends AppWidgetProvider {
 				}
 			}).start();
 		}
-
-		Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
-		context.startService(serviceIntent);
 	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
+
+		if (appWidgetIds.length > 0) {
+			Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
+			context.startService(serviceIntent);
+		}
 
 		for (int appWidgetId : appWidgetIds) {
 			onWidgetUpdate(context, appWidgetManager, appWidgetId);
@@ -152,6 +153,7 @@ public class Widget2_1 extends AppWidgetProvider {
 	public void onDisabled(Context context) {
 		Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
 		context.stopService(serviceIntent);
+
 		super.onDisabled(context);
 	}
 }
