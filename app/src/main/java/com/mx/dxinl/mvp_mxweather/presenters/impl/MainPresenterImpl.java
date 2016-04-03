@@ -92,7 +92,6 @@ public class MainPresenterImpl implements MainPresenter {
 		spHelper.addChosenCity(cityName, cityNum, cityType);
 		setCurrentCityInfo(cityName, cityNum, cityType);
 		initNavigationMenu();
-		clearFragmentBackStack();
 	}
 
 	@Override
@@ -151,7 +150,7 @@ public class MainPresenterImpl implements MainPresenter {
 		FragmentManager fm = view.getIViewFragmentManager();
 		int id = item.getItemId();
 		boolean isFoundFragment = false;
-		view.cancelGetWeatherTask();
+		view.showOthersContentPanel();
 		switch (id) {
 			case R.id.add_city:
 				for (int i = fm.getBackStackEntryCount() - 1; i >= 0; i--) {
@@ -165,7 +164,7 @@ public class MainPresenterImpl implements MainPresenter {
 				if (!isFoundFragment) {
 					CitiesTabFragment citiesTabFragment = new CitiesTabFragment();
 					FragmentTransaction transaction = view.getIViewFragmentManager().beginTransaction();
-					transaction.replace(R.id.content_panel, citiesTabFragment);
+					transaction.replace(R.id.others_content_panel, citiesTabFragment);
 					transaction.addToBackStack("addCity");
 					transaction.commit();
 				}
@@ -183,7 +182,7 @@ public class MainPresenterImpl implements MainPresenter {
 				if (!isFoundFragment) {
 					CitiesManagerFragment citiesManagerFragment = new CitiesManagerFragment();
 					FragmentTransaction transaction = view.getIViewFragmentManager().beginTransaction();
-					transaction.replace(R.id.content_panel, citiesManagerFragment);
+					transaction.replace(R.id.others_content_panel, citiesManagerFragment);
 					transaction.addToBackStack("manageCity");
 					transaction.commit();
 				}
@@ -201,7 +200,7 @@ public class MainPresenterImpl implements MainPresenter {
 				if (!isFoundFragment) {
 					SettingsFragment settingsFragment = new SettingsFragment();
 					FragmentTransaction transaction = view.getIViewFragmentManager().beginTransaction();
-					transaction.replace(R.id.content_panel, settingsFragment);
+					transaction.replace(R.id.others_content_panel, settingsFragment);
 					transaction.addToBackStack("settings");
 					transaction.commit();
 				}

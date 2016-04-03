@@ -8,6 +8,8 @@ import android.view.Menu;
  * Created by DengXinliang on 2016/3/14.
  */
 public interface IMainView {
+	void showOthersContentPanel();
+
 	void hideSoftInputMethod();
 
 	Menu getNavigationMenu();
@@ -17,6 +19,4 @@ public interface IMainView {
 	Context getIViewContext();
 
 	void refreshFragment();
-
-	void cancelGetWeatherTask();
 }

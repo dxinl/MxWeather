@@ -17,7 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private MainPresenter presenter;
 	private WeatherFragment weatherFragment;
 	private NavigationView navigationView;
+	private FrameLayout othersContentPanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		toggle.syncState();
 
 		weatherFragment = new WeatherFragment();
-		getSupportFragmentManager().beginTransaction().replace(R.id.content_panel, weatherFragment).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.main_content_panel, weatherFragment).commit();
+
+		othersContentPanel = (FrameLayout) findViewById(R.id.others_content_panel);
+		othersContentPanel.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -130,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
+			if (getSupportFragmentManager().getBackStackEntryCount() == 1 && othersContentPanel.getVisibility() == View.VISIBLE) {
+				othersContentPanel.setVisibility(View.GONE);
+				setTitle(getCurrentCityName());
+			}
 			super.onBackPressed();
 		}
 	}
@@ -142,6 +152,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	@Override
+	public void showOthersContentPanel() {
+		othersContentPanel.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -171,11 +186,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		weatherFragment.onRefresh();
 	}
 
-	@Override
-	public void cancelGetWeatherTask() {
-		weatherFragment.cancelGetWeatherTask();
-	}
-
 	public String getCurrentCityNum() {
 		return presenter.getCurrentCityNum();
 	}
@@ -197,10 +207,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	public void updateNavHeader(String code) {
-		ImageView weatherIcon = (ImageView) navigationView.findViewById(R.id.weather_icon);
+		ImageView weatherIcon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.weather_icon);
 		presenter.setImageBitmap(weatherIcon, code);
 
-		TextView cityName = (TextView) navigationView.findViewById(R.id.city_name);
+		TextView cityName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.city_name);
 		cityName.setText(getCurrentCityName());
 	}
 }

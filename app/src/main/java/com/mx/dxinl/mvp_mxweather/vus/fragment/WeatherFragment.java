@@ -107,11 +107,11 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			dailyTemperatureView.setData(dailyWeathers);
 			dayIcons.setVisibility(View.VISIBLE);
 			WeatherIconsFragment dayWeatherFragment = WeatherIconsFragment.newInstance(presenter, dailyWeathers);
-			getChildFragmentManager().beginTransaction().replace(R.id.day_weather, dayWeatherFragment).commitAllowingStateLoss();
+			getChildFragmentManager().beginTransaction().replace(R.id.day_weather, dayWeatherFragment).commit();
 
 			nightIcons.setVisibility(View.VISIBLE);
 			WeatherIconsFragment nightWeatherFragment = WeatherIconsFragment.newInstance(presenter, dailyWeathers, true);
-			getChildFragmentManager().beginTransaction().replace(R.id.night_weather, nightWeatherFragment).commitAllowingStateLoss();
+			getChildFragmentManager().beginTransaction().replace(R.id.night_weather, nightWeatherFragment).commit();
 		}
 	}
 
@@ -196,7 +196,7 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 
 	@Override
 	public void onRefresh() {
-		cancelGetWeatherTask();
+		presenter.cancelGetWeatherTask();
 		presenter.showData(((MainActivity) getActivity()).getCurrentCityNum(), ((MainActivity) getActivity()).getCurrentCityType());
 		getActivity().setTitle(((MainActivity) getActivity()).getCurrentCityName());
 	}

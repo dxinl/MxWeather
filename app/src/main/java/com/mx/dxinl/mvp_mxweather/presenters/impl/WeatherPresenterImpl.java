@@ -1,6 +1,5 @@
 package com.mx.dxinl.mvp_mxweather.presenters.impl;
 
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.ImageView;
