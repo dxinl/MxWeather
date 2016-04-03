@@ -23,5 +23,5 @@ public interface IWeatherView {
 
 	void updateWidget2_1(NowWeatherBean nowWeatherBean);
 
-	Context getContext();
+	Context getIViewContext();
 }

@@ -87,12 +87,13 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 	}
 
 	@Override
-	public Context getContext() {
+	public Context getIViewContext() {
 		return getActivity();
 	}
 
 	public void cancelGetWeatherTask() {
 		presenter.cancelGetWeatherTask();
+		setRefreshing(false);
 	}
 
 	public void setHourlyWeathers(List<HourlyWeatherBean> hourlyWeathers) {

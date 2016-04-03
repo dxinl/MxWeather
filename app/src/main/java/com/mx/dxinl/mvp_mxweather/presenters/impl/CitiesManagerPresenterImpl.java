@@ -21,9 +21,9 @@ public class CitiesManagerPresenterImpl implements CitiesManagerPresenter {
 	private ICitiesManagerView view;
 	private SharedPreferencesHelper spHelper;
 
-	public CitiesManagerPresenterImpl(Context context, ICitiesManagerView view) {
+	public CitiesManagerPresenterImpl(ICitiesManagerView view) {
 		this.view = view;
-		spHelper = new SharedPreferencesHelper(context);
+		spHelper = new SharedPreferencesHelper(view.getIViewContext());
 	}
 
 	@Override

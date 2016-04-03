@@ -1,5 +1,6 @@
 package com.mx.dxinl.mvp_mxweather.vus.interfaces;
 
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 
@@ -12,6 +13,8 @@ public interface IMainView {
 	Menu getNavigationMenu();
 
 	FragmentManager getIViewFragmentManager();
+
+	Context getIViewContext();
 
 	void refreshFragment();
 

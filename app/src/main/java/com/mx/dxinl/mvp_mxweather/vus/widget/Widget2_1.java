@@ -31,45 +31,71 @@ import java.util.concurrent.TimeoutException;
  */
 public class Widget2_1 extends AppWidgetProvider {
 	public static final String REFRESH_ACTION = "com.mx.dxinl.mxweather.action.REFRESH";
+	public static final String MODIFY_UPDATE_INTERVAL = "com.mx.dxinl.mxweather.action.MODIFY_INTERVAL";
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
 		super.onReceive(context, intent);
 
-		if (intent.getAction().equals(REFRESH_ACTION)) {
-			final NowWeatherBean nowWeather = intent.getParcelableExtra("NowWeather");
-			final String cityName = intent.getStringExtra("CurrentCity");
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					makeRemoteViewsAndUpdate(context, nowWeather, cityName);
-					System.gc();
-				}
-			}).start();
-		} else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_UPDATE")) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					SharedPreferencesHelper spHelper = new SharedPreferencesHelper(context);
-					String[] cityInfo = spHelper.getCurrentCityInfo();
-					if (cityInfo == null || cityInfo.length != 3) {
-						cityInfo = new String[]{"北京", "CN101010100", "weather"};
-					}
-
-					makeRemoteViewsAndUpdate(context, getNowWeather(cityInfo), cityInfo[0]);
-				}
-			}).start();
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, Widget2_1.class));
+		if (appWidgetIds.length <= 0) {
+			return;
 		}
+
+		Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
+		switch (intent.getAction()) {
+			case REFRESH_ACTION:
+				final NowWeatherBean nowWeather = intent.getParcelableExtra("NowWeather");
+				final String cityName = intent.getStringExtra("CurrentCity");
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						makeRemoteViewsAndUpdate(context, nowWeather, cityName);
+						System.gc();
+					}
+				}).start();
+
+				serviceIntent.putExtra("NeedUpdateInterval", false);
+				break;
+
+			case MODIFY_UPDATE_INTERVAL:
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						String[] cityInfo = getCityInfo(context);
+						makeRemoteViewsAndUpdate(context, getNowWeather(cityInfo), cityInfo[0]);
+					}
+				}).start();
+
+				// stop service
+				// we will restart it when the switch-block is done.
+				context.stopService(serviceIntent);
+				serviceIntent.putExtra("NeedUpdateInterval", true);
+				break;
+
+			case "android.appwidget.action.APPWIDGET_UPDATE":
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						String[] cityInfo = getCityInfo(context);
+						makeRemoteViewsAndUpdate(context, getNowWeather(cityInfo), cityInfo[0]);
+					}
+				}).start();
+
+				serviceIntent.putExtra("NeedUpdateInterval", false);
+				break;
+		}
+
+		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(context.getApplicationContext());
+		long interval = spHelper.getUpdateWidgetInterval();
+		serviceIntent.putExtra("Interval", interval);
+		context.startService(serviceIntent);
 	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-
-		if (appWidgetIds.length > 0) {
-			Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
-			context.startService(serviceIntent);
-		}
 
 		for (int appWidgetId : appWidgetIds) {
 			onWidgetUpdate(context, appWidgetManager, appWidgetId);
@@ -120,6 +146,16 @@ public class Widget2_1 extends AppWidgetProvider {
 			return BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
 		}
 		return bitmap;
+	}
+
+	private String[] getCityInfo(Context context) {
+		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(context);
+		String[] cityInfo = spHelper.getCurrentCityInfo();
+		if (cityInfo == null || cityInfo.length != 3) {
+			cityInfo = new String[]{"北京", "CN101010100", "weather"};
+		}
+
+		return cityInfo;
 	}
 
 	@SuppressWarnings("TryWithIdenticalCatches")

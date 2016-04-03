@@ -1,5 +1,6 @@
 package com.mx.dxinl.mvp_mxweather.vus.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +38,7 @@ public class CitiesManagerFragment extends HasOptionsMenuFragment implements ICi
 		super.onViewCreated(view, savedInstanceState);
 
 		getActivity().setTitle(getString(R.string.manage_city));
-		presenter = new CitiesManagerPresenterImpl(getActivity(), this);
+		presenter = new CitiesManagerPresenterImpl(this);
 
 		citiesListView = (RecyclerView) view.findViewById(R.id.cities_list);
 		citiesListView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -68,6 +69,11 @@ public class CitiesManagerFragment extends HasOptionsMenuFragment implements ICi
 	@Override
 	public void notifyDataSetChanged() {
 		citiesListView.getAdapter().notifyDataSetChanged();
+	}
+
+	@Override
+	public Context getIViewContext() {
+		return getActivity().getApplicationContext();
 	}
 
 	private final class ListAdapter extends RecyclerView.Adapter<ListHolder> {

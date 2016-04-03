@@ -49,14 +49,12 @@
 	<string name="suggestion_sport">运动指数</string>
 	<string name="suggestion_travel">旅游指数</string>
 
-	<string name="choice">请选择</string>
-	<string name="widget_preferences">桌面小工具</string>
-	<string name="choice_repeat_time">更新间隔</string>
-	<string-array name="update_widget_repeat_time">
-		<item>30分钟</item>
-		<item>1小时</item>
-		<item>2小时</item>
-		<item>5小时</item>
-		<item>12小时</item>
-	</string-array>
+	<string name="widget_preferences">桌面Widget更新间隔</string>
+	<string name="thirty_minute">30分钟</string>
+	<string name="an_hour">1小时</string>
+	<string name="two_hour">2小时</string>
+	<string name="four_hour">4小时</string>
+	<string name="six_hour">6小时</string>
+	<string name="twelve_hour">12小时</string>
+	<string name="a_day">1天</string>
 </resources>

@@ -3,10 +3,8 @@ package com.mx.dxinl.mvp_mxweather.vus.interfaces;
 import android.content.Context;
 
 /**
- * Created by DengXinliang on 2016/3/14.
+ * Created by dxinl on 2016/4/3.
  */
-public interface ICitiesManagerView {
-	void notifyDataSetChanged();
-
+public interface ISettingsView {
 	Context getIViewContext();
 }

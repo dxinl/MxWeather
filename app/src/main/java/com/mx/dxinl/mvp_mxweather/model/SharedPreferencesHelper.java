@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.mx.dxinl.mvp_mxweather.model.bean.CityInfo;
+import com.mx.dxinl.mvp_mxweather.utils.OtherUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,29 +14,24 @@ import java.util.List;
  * Created by DengXinliang on 2016/3/14.
  */
 public class SharedPreferencesHelper {
+	private final String APPLICATION = "com.mx.dxinl.mxweather";
 	private final String CHOSEN_CITIES = "CHOSEN_CITY";
 	private final String CURRENT_CITY = "CURRENT_CITY";
+	private final String UPDATE_WIDGEET_INTERVAL = "INTERVAL";
 
 	private SharedPreferences sp;
-	private Context context;
 
 	public SharedPreferencesHelper(Context context) {
-		this.context = context;
+		sp = context.getSharedPreferences(APPLICATION, Context.MODE_PRIVATE);
 	}
 
 	public void setCurrentCityInfo(String currentCityName, String currentCityNum, String currentCityType) {
-		if (sp == null) {
-			sp = context.getSharedPreferences(this.getClass().getName(), Context.MODE_PRIVATE);
-		}
 		SharedPreferences.Editor spEditor = sp.edit();
 		spEditor.putString(CURRENT_CITY, currentCityName + "," + currentCityNum + "," + currentCityType);
 		spEditor.commit();
 	}
 
 	public String[] getCurrentCityInfo() {
-		if (sp == null) {
-			sp = context.getSharedPreferences(this.getClass().getName(), Context.MODE_PRIVATE);
-		}
 		String currentCityInfo = sp.getString(CURRENT_CITY, "");
 		if (TextUtils.isEmpty(currentCityInfo)) {
 			return null;
@@ -46,9 +42,6 @@ public class SharedPreferencesHelper {
 
 	public List<CityInfo> getCitiesInfo() {
 		List<CityInfo> chosenCities = new ArrayList<>();
-		if (sp == null) {
-			sp = context.getSharedPreferences(this.getClass().getName(), Context.MODE_PRIVATE);
-		}
 		String chosenCitiesNameAndNum = sp.getString(CHOSEN_CITIES, "");
 		if (TextUtils.isEmpty(chosenCitiesNameAndNum)) {
 			CityInfo cityInfo = new CityInfo();
@@ -72,9 +65,6 @@ public class SharedPreferencesHelper {
 	}
 
 	public void setChosenCities(List<CityInfo> chosenCities) {
-		if (sp == null) {
-			sp = context.getSharedPreferences(this.getClass().getName(), Context.MODE_PRIVATE);
-		}
 		StringBuilder sb = new StringBuilder();
 		for (CityInfo cityInfo : chosenCities) {
 			if (sb.length() != 0) {
@@ -90,9 +80,6 @@ public class SharedPreferencesHelper {
 	}
 
 	public void addChosenCity(String newCityName, String newCityNum, String newCityType) {
-		if (sp == null) {
-			sp = context.getSharedPreferences(this.getClass().getName(), Context.MODE_PRIVATE);
-		}
 		String chosenCitiesNameAndNum = sp.getString(CHOSEN_CITIES, "");
 		if (chosenCitiesNameAndNum.contains(newCityName)) {
 			return;
@@ -106,5 +93,26 @@ public class SharedPreferencesHelper {
 		SharedPreferences.Editor spEditor = sp.edit();
 		spEditor.putString(CHOSEN_CITIES, chosenCitiesNameAndNum);
 		spEditor.commit();
+	}
+
+	public void setUpdateWidgetInterval(long interval) {
+		SharedPreferences.Editor spEditor = sp.edit();
+		spEditor.putString(UPDATE_WIDGEET_INTERVAL, String.valueOf(interval));
+		spEditor.commit();
+	}
+
+	public long getUpdateWidgetInterval() {
+		String defaultInterval;
+		if (OtherUtils.isDebug()) {
+			defaultInterval = "2000";
+		} else {
+			defaultInterval = "7200000";
+		}
+		String interval = sp.getString(UPDATE_WIDGEET_INTERVAL, defaultInterval);
+		try {
+			return Long.parseLong(interval);
+		} catch (Exception e) {
+			return Long.parseLong(defaultInterval);
+		}
 	}
 }

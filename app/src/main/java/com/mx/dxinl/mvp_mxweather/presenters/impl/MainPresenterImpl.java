@@ -36,9 +36,9 @@ public class MainPresenterImpl implements MainPresenter {
 	private IMainView view;
 	private Context context;
 
-	public MainPresenterImpl(Context context, IMainView view) {
-		this.context = context;
+	public MainPresenterImpl(IMainView view) {
 		this.view = view;
+		this.context = view.getIViewContext();
 		spHelper = new SharedPreferencesHelper(context);
 	}
 

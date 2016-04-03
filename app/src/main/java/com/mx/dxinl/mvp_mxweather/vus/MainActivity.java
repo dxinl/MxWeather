@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	private void initActivity() {
-		presenter = new MainPresenterImpl(this, this);
+		presenter = new MainPresenterImpl(this);
 		presenter.processDB();
 
 		navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -158,6 +158,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Override
 	public FragmentManager getIViewFragmentManager() {
 		return getSupportFragmentManager();
+	}
+
+	@Override
+	public Context getIViewContext() {
+		return getApplicationContext();
 	}
 
 	@Override

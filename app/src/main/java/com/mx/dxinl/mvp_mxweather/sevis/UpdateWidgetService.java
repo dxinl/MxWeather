@@ -34,8 +34,10 @@ public class UpdateWidgetService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (updateWidgetThread == null || !updateWidgetThread.isAlive()) {
-			updateWidgetThread = new UpdateWidgetThread();
+		long interval = intent.getLongExtra("Interval", 7200000);
+		boolean isNeedToUpdateInterval = intent.getBooleanExtra("NeedUpdateInterval", false);
+		if (isNeedToUpdateInterval || updateWidgetThread == null || !updateWidgetThread.isAlive()) {
+			updateWidgetThread = new UpdateWidgetThread(interval);
 			updateWidgetThread.start();
 		}
 		return START_REDELIVER_INTENT;
@@ -43,7 +45,7 @@ public class UpdateWidgetService extends Service {
 
 	@SuppressWarnings("TryWithIdenticalCatches")
 	private void getDataAndUpdateWidget() {
-		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(this);
+		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(getApplicationContext());
 		String[] cityInfo = spHelper.getCurrentCityInfo();
 		if (cityInfo == null || cityInfo.length != 3) {
 			cityInfo = new String[]{"北京", "CN101010100", "weather"};
@@ -85,15 +87,16 @@ public class UpdateWidgetService extends Service {
 
 	private final class UpdateWidgetThread extends Thread {
 		private volatile boolean stopThread = false;
+		private volatile long interval = 120 * 60 * 1000;
+
+		public UpdateWidgetThread(long interval) {
+			this.interval = interval;
+		}
 
 		@Override
 		public void run() {
 			while (!stopThread) {
-				if (OtherUtils.isDebug()) {
-					SystemClock.sleep(1000);
-				} else {
-					SystemClock.sleep(120 * 60 * 1000);
-				}
+				SystemClock.sleep(interval);
 
 				System.out.println("UpdateWidgetService:" + String.valueOf(Calendar.getInstance().getTimeInMillis()));
 				getDataAndUpdateWidget();
