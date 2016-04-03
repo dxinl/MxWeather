@@ -15,7 +15,7 @@ import com.mx.dxinl.mvp_mxweather.R;
  * Created by DengXinliang on 2016/1/4.
  */
 public class OtherUtils {
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	public static boolean isDebug() {
 		return DEBUG;
