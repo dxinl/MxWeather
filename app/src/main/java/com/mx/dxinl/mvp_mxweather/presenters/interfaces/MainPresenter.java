@@ -30,4 +30,6 @@ public interface MainPresenter {
 	void setCurrentCity(String cityName, String cityNum, String cityType);
 
 	List<CityInfo> getCitiesInfo(boolean isNeedUpdate);
+
+	void clearFragmentBackStack();
 }

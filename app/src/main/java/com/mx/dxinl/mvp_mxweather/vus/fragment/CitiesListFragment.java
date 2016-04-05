@@ -71,7 +71,7 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 		String cityNum = presenter.getCurrentCityNum(cityName, type);
 		MainActivity activity = (MainActivity) getActivity();
 		activity.setCurrentCity(cityName, cityNum, type);
-		activity.onBackPressed();
+		activity.clearFragmentBackStack();
 		activity.refreshFragment();
 	}
 

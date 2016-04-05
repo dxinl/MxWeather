@@ -186,6 +186,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		weatherFragment.onRefresh();
 	}
 
+	public void clearFragmentBackStack() {
+		presenter.clearFragmentBackStack();
+		othersContentPanel.setVisibility(View.GONE);
+	}
+
 	public String getCurrentCityNum() {
 		return presenter.getCurrentCityNum();
 	}

@@ -208,7 +208,8 @@ public class MainPresenterImpl implements MainPresenter {
 		}
 	}
 
-	private void clearFragmentBackStack() {
+	@Override
+	public void clearFragmentBackStack() {
 		FragmentManager fm = view.getIViewFragmentManager();
 		if (fm.getBackStackEntryCount() > 0) {
 			fm.popBackStackImmediate(fm.getBackStackEntryAt(0).getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
