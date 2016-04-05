@@ -92,7 +92,6 @@ public class MainPresenterImpl implements MainPresenter {
 		spHelper.addChosenCity(cityName, cityNum, cityType);
 		setCurrentCityInfo(cityName, cityNum, cityType);
 		initNavigationMenu();
-		view.refreshFragment();
 	}
 
 	@Override

@@ -72,6 +72,7 @@ public class CitiesListFragment extends Fragment implements View.OnClickListener
 		MainActivity activity = (MainActivity) getActivity();
 		activity.setCurrentCity(cityName, cityNum, type);
 		activity.onBackPressed();
+		activity.refreshFragment();
 	}
 
 	private final class CitiesListAdapter extends RecyclerView.Adapter<CitiesListHolder> {

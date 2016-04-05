@@ -16,9 +16,14 @@ import com.mx.dxinl.mvp_mxweather.R;
  */
 public class OtherUtils {
 	private static final boolean DEBUG = false;
+	private static final boolean BESSEL = true;
 
 	public static boolean isDebug() {
 		return DEBUG;
+	}
+
+	public static boolean isBessel() {
+		return BESSEL;
 	}
 
 	public static int getScreenWidth(Context context) {

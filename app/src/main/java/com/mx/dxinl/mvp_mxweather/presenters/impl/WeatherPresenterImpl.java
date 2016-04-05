@@ -36,7 +36,7 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 
 	public WeatherPresenterImpl(IWeatherView view) {
 		this.view = view;
-		this.mHandler = new UpdateWeatherHandler();
+		this.mHandler = new UpdateWeatherHandler(this);
 	}
 
 	@Override
@@ -77,26 +77,32 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 		ImageLoader.get().setImageBitmap(view, code);
 	}
 
-	private final class UpdateWeatherHandler extends Handler {
+	private static final class UpdateWeatherHandler extends Handler {
+		private WeatherPresenterImpl presenter;
+
+		public UpdateWeatherHandler(WeatherPresenterImpl presenter) {
+			this.presenter = presenter;
+		}
+
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == UPDATE_MSG_WHAT) {
-				if (stopSettingData) {
+			if (msg.what == presenter.UPDATE_MSG_WHAT) {
+				if (presenter.stopSettingData) {
 					return;
 				}
 
 				JSONObject jsonObject = (JSONObject) msg.obj;
-				view.setRefreshing(false);
+				presenter.view.setRefreshing(false);
 				if (jsonObject == null) {
-					Toast.makeText(view.getIViewContext(), R.string.cannot_get_data_from_network, Toast.LENGTH_SHORT).show();
-					view.clearAllData();
+					Toast.makeText(presenter.view.getIViewContext(), R.string.cannot_get_data_from_network, Toast.LENGTH_SHORT).show();
+					presenter.view.clearAllData();
 					return;
 				}
 
 				JSONHelper jsonHelper = new JSONHelper(jsonObject);
 				if (!jsonHelper.checkJSONObject()) {
-					Toast.makeText(view.getIViewContext(), R.string.incorrect_city, Toast.LENGTH_SHORT).show();
-					view.clearAllData();
+					Toast.makeText(presenter.view.getIViewContext(), R.string.incorrect_city, Toast.LENGTH_SHORT).show();
+					presenter.view.clearAllData();
 					return;
 				}
 
@@ -106,8 +112,8 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 				List<DailyWeatherBean> dailyWeathers = jsonHelper.getDailyWeathers();
 				SuggestionBean suggestion = jsonHelper.getSuggestion();
 
-				view.setData(hourlyWeathers, nowWeather, airQuality, dailyWeathers, suggestion);
-				view.updateWidget2_1(nowWeather);
+				presenter.view.setData(hourlyWeathers, nowWeather, airQuality, dailyWeathers, suggestion);
+				presenter.view.updateWidget2_1(nowWeather);
 			}
 		}
 	}
