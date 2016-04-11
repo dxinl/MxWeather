@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.mx.dxinl.mvp_mxweather.R;
 import com.mx.dxinl.mvp_mxweather.model.JSONHelper;
 import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
+import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.model.bean.AirQualityBean;
 import com.mx.dxinl.mvp_mxweather.model.bean.DailyWeatherBean;
 import com.mx.dxinl.mvp_mxweather.model.bean.HourlyWeatherBean;
@@ -75,6 +76,12 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 	@Override
 	public void setImageBitmap(ImageView view, String code) {
 		ImageLoader.get().setImageBitmap(view, code);
+	}
+
+	@Override
+	public boolean getShowBessel() {
+		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(view.getIViewContext());
+		return spHelper.getShowBessel();
 	}
 
 	private static final class UpdateWeatherHandler extends Handler {

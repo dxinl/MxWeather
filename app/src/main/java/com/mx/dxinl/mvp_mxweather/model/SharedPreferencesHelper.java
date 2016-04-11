@@ -18,6 +18,7 @@ public class SharedPreferencesHelper {
 	private final String CHOSEN_CITIES = "CHOSEN_CITY";
 	private final String CURRENT_CITY = "CURRENT_CITY";
 	private final String UPDATE_WIDGEET_INTERVAL = "INTERVAL";
+	private final String SHOW_BESSEL = "SHOW_BESSEL";
 
 	private SharedPreferences sp;
 
@@ -108,11 +109,21 @@ public class SharedPreferencesHelper {
 		} else {
 			defaultInterval = "7200000";
 		}
-		String interval = sp.getString(UPDATE_WIDGEET_INTERVAL, defaultInterval);
+		String intervalStr =  sp.getString(UPDATE_WIDGEET_INTERVAL, defaultInterval);
 		try {
-			return Long.parseLong(interval);
+			return Long.parseLong(intervalStr);
 		} catch (Exception e) {
 			return Long.parseLong(defaultInterval);
 		}
+	}
+
+	public void setShowBessel(boolean isShow) {
+		SharedPreferences.Editor spEditor = sp.edit();
+		spEditor.putBoolean(SHOW_BESSEL, isShow);
+		spEditor.commit();
+	}
+
+	public boolean getShowBessel() {
+		return sp.getBoolean(SHOW_BESSEL, true);
 	}
 }

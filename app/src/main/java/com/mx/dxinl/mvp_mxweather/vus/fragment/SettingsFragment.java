@@ -10,6 +10,8 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -18,6 +20,7 @@ import com.mx.dxinl.mvp_mxweather.model.SharedPreferencesHelper;
 import com.mx.dxinl.mvp_mxweather.presenters.impl.SettingsPresenterImpl;
 import com.mx.dxinl.mvp_mxweather.presenters.interfaces.SettingsPresenter;
 import com.mx.dxinl.mvp_mxweather.utils.OtherUtils;
+import com.mx.dxinl.mvp_mxweather.vus.MainActivity;
 import com.mx.dxinl.mvp_mxweather.vus.interfaces.ISettingsView;
 import com.mx.dxinl.mvp_mxweather.vus.widget.Widget2_1;
 
@@ -114,8 +117,7 @@ public class SettingsFragment extends Fragment implements ISettingsView {
 			}
 		});
 
-		SharedPreferencesHelper spHelper = new SharedPreferencesHelper(getIViewContext());
-		long interval = spHelper.getUpdateWidgetInterval();
+		long interval = presenter.getUpdateWidgetInterval();
 		if (OtherUtils.isDebug()) {
 			if (interval == 1000) {
 				((RadioButton) view.findViewById(R.id.thirty_minute)).setChecked(true);
@@ -152,6 +154,21 @@ public class SettingsFragment extends Fragment implements ISettingsView {
 			} else {
 				((RadioButton) view.findViewById(R.id.two_hour)).setChecked(true);
 			}
+		}
+
+		CheckBox showBessel = (CheckBox) view.findViewById(R.id.check_show_bessel);
+		showBessel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				((MainActivity) getActivity()).setShowBessel(isChecked);
+				presenter.setShowBessel(isChecked);
+			}
+		});
+
+		if (presenter.getShowBessel()) {
+			showBessel.setChecked(true);
+		} else {
+			showBessel.setChecked(false);
 		}
 	}
 

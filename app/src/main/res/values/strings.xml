@@ -57,4 +57,7 @@
 	<string name="six_hour">6小时</string>
 	<string name="twelve_hour">12小时</string>
 	<string name="a_day">1天</string>
+
+	<string name="weather_in_seven_days">一周天气预报</string>
+	<string name="show_bessel">使用贝塞尔曲线进行展示</string>
 </resources>

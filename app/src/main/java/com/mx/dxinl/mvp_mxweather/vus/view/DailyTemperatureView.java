@@ -36,7 +36,8 @@ public class DailyTemperatureView extends View {
 	private Paint paint = new Paint();
 	private Path path = new Path();
 	private RectF rectF = new RectF();
-	private Rect imgRect = new Rect();
+
+	private boolean showBessel = true;
 
 	public DailyTemperatureView(Context context) {
 		super(context);
@@ -115,7 +116,7 @@ public class DailyTemperatureView extends View {
 			float minCenterY = calcCenterY(dailyWeather.minTmp, circleTop, heightUnit);
 			drawCircles(canvas, centerX, minCenterY, circleRadius);
 
-			if (!OtherUtils.isBessel() && i > 0) {
+			if (!showBessel && i > 0) {
 				drawLines(canvas, centerX, maxCenterY, preDayTmp[0]);
 				drawLines(canvas, centerX, minCenterY, preDayTmp[1]);
 			}
@@ -129,7 +130,7 @@ public class DailyTemperatureView extends View {
 			drawTexts(canvas, centerX, minCenterY, normalTxtSize, circleRadius, dailyWeather.minTmp, false);
 		}
 
-		if (OtherUtils.isBessel()) {
+		if (showBessel) {
 			minControlPoints.clear();
 			maxControlPoints.clear();
 
@@ -284,6 +285,11 @@ public class DailyTemperatureView extends View {
 			}
 		}
 
+		invalidate();
+	}
+
+	public void setShowBessel(boolean isShow) {
+		this.showBessel = isShow;
 		invalidate();
 	}
 

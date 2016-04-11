@@ -63,6 +63,7 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 
 		hourlyWeatherView = (HourlyWeatherView) view.findViewById(R.id.hourly_weather);
 		dailyTemperatureView = (DailyTemperatureView) view.findViewById(R.id.daily_tmp_weather);
+		dailyTemperatureView.setShowBessel(presenter.getShowBessel());
 
 		weatherIcon = (ImageView) view.findViewById(R.id.weather_icon);
 		weatherDesc = (TextView) view.findViewById(R.id.weather_desc);
@@ -199,5 +200,9 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 		presenter.cancelGetWeatherTask();
 		presenter.showData(((MainActivity) getActivity()).getCurrentCityNum(), ((MainActivity) getActivity()).getCurrentCityType());
 		getActivity().setTitle(((MainActivity) getActivity()).getCurrentCityName());
+	}
+
+	public void setShowBessel(boolean isShow) {
+		dailyTemperatureView.setShowBessel(isShow);
 	}
 }

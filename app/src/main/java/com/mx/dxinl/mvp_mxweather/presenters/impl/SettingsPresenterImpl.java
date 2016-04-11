@@ -20,4 +20,19 @@ public class SettingsPresenterImpl implements SettingsPresenter {
 	public void setUpdateWidgetInterval(long interval) {
 		spHelper.setUpdateWidgetInterval(interval);
 	}
+
+	@Override
+	public long getUpdateWidgetInterval() {
+		return spHelper.getUpdateWidgetInterval();
+	}
+
+	@Override
+	public void setShowBessel(boolean isShow) {
+		spHelper.setShowBessel(isShow);
+	}
+
+	@Override
+	public boolean getShowBessel() {
+		return spHelper.getShowBessel();
+	}
 }

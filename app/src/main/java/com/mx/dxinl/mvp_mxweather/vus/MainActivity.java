@@ -218,4 +218,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		TextView cityName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.city_name);
 		cityName.setText(getCurrentCityName());
 	}
+
+	public void setShowBessel(boolean isShow) {
+		weatherFragment.setShowBessel(isShow);
+	}
 }

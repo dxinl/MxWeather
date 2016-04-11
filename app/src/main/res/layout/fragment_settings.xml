@@ -77,6 +77,48 @@
 
 		</RadioGroup>
 
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/light_line_width"
+			android:background="@android:color/darker_gray"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/small_margin"
+			android:text="@string/weather_in_seven_days"
+			android:textColor="@android:color/black"
+			android:textSize="@dimen/large_txt_size"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/light_line_width"
+			android:background="@android:color/darker_gray"/>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<CheckBox
+				android:id="@+id/check_show_bessel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:layout_margin="@dimen/small_margin"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_margin="@dimen/small_margin"
+				android:text="@string/show_bessel"
+				android:textColor="@android:color/black"
+				android:textSize="@dimen/normal_txt_size"/>
+
+		</RelativeLayout>
+
 	</LinearLayout>
 
 </ScrollView>

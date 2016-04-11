@@ -12,4 +12,6 @@ public interface WeatherPresenter {
 	void cancelGetWeatherTask();
 
 	void setImageBitmap(ImageView view, String code);
+
+	boolean getShowBessel();
 }
