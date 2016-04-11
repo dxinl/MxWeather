@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup android:id="@+id/chose_interval"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/activity_horizontal_margin">
+
+	<RadioButton
+		android:id="@+id/thirty_minute"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/thirty_minute"/>
+
+	<RadioButton
+		android:id="@+id/an_hour"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/an_hour"/>
+
+	<RadioButton
+		android:id="@+id/two_hour"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/two_hour"/>
+
+	<RadioButton
+		android:id="@+id/four_hour"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/four_hour"/>
+
+	<RadioButton
+		android:id="@+id/six_hour"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/six_hour"/>
+
+	<RadioButton
+		android:id="@+id/twelve_hour"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/twelve_hour"/>
+
+	<RadioButton
+		android:id="@+id/a_day"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/a_day"/>
+
+</RadioGroup>

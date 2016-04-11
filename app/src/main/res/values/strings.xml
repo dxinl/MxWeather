@@ -50,6 +50,7 @@
 	<string name="suggestion_travel">旅游指数</string>
 
 	<string name="widget_preferences">桌面Widget更新间隔</string>
+	<string name="chose_interval">选择间隔</string>
 	<string name="thirty_minute">30分钟</string>
 	<string name="an_hour">1小时</string>
 	<string name="two_hour">2小时</string>
@@ -58,6 +59,7 @@
 	<string name="twelve_hour">12小时</string>
 	<string name="a_day">1天</string>
 
-	<string name="weather_in_seven_days">一周天气预报</string>
-	<string name="show_bessel">使用贝塞尔曲线进行展示</string>
+	<string name="weather_in_seven_days">天气预报展示方式</string>
+	<string name="show_bessel">曲线图</string>
+	<string name="show_line">折线图</string>
 </resources>

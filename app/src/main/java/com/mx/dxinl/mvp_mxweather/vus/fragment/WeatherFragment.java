@@ -188,11 +188,13 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 
 	@Override
 	public void updateWidget2_1(NowWeatherBean nowWeather) {
-		Intent intent = new Intent();
-		intent.setAction(Widget2_1.REFRESH_ACTION);
-		intent.putExtra("NowWeather", nowWeather);
-		intent.putExtra("CurrentCity", ((MainActivity) getActivity()).getCurrentCityName());
-		getActivity().sendBroadcast(intent);
+		if (getActivity() != null) {
+			Intent intent = new Intent();
+			intent.setAction(Widget2_1.REFRESH_ACTION);
+			intent.putExtra("NowWeather", nowWeather);
+			intent.putExtra("CurrentCity", ((MainActivity) getActivity()).getCurrentCityName());
+			getActivity().sendBroadcast(intent);
+		}
 	}
 
 	@Override
