@@ -59,7 +59,7 @@
 	<string name="twelve_hour">12小时</string>
 	<string name="a_day">1天</string>
 
-	<string name="weather_in_seven_days">天气预报展示方式</string>
+	<string name="weather_in_seven_days">天气预报曲线图</string>
 	<string name="show_bessel">曲线图</string>
 	<string name="show_line">折线图</string>
 </resources>
