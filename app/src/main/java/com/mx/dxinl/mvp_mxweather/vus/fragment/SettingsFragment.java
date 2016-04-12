@@ -3,6 +3,7 @@ package com.mx.dxinl.mvp_mxweather.vus.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -131,7 +132,11 @@ public class SettingsFragment extends Fragment implements ISettingsView {
 
 	private void showDialog() {
 		if (choseIntervalDialog == null) {
-			choseIntervalDialog = new Dialog(getActivity());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				choseIntervalDialog = new Dialog(getActivity(), android.R.style.Theme_Material_Light_Dialog);
+			} else {
+				choseIntervalDialog = new Dialog(getActivity());
+			}
 			choseIntervalDialog.setTitle(getString(R.string.chose_interval));
 			choseIntervalDialog.setContentView(R.layout.dialog_chose_interval);
 		}

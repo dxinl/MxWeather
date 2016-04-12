@@ -1,5 +1,6 @@
 package com.mx.dxinl.mvp_mxweather.presenters.impl;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.ImageView;
@@ -101,14 +102,20 @@ public class WeatherPresenterImpl implements WeatherPresenter {
 				JSONObject jsonObject = (JSONObject) msg.obj;
 				presenter.view.setRefreshing(false);
 				if (jsonObject == null) {
-					Toast.makeText(presenter.view.getIViewContext(), R.string.cannot_get_data_from_network, Toast.LENGTH_SHORT).show();
+					Context context = presenter.view.getIViewContext();
+					if (context != null) {
+						Toast.makeText(presenter.view.getIViewContext(), R.string.cannot_get_data_from_network, Toast.LENGTH_SHORT).show();
+					}
 					presenter.view.clearAllData();
 					return;
 				}
 
 				JSONHelper jsonHelper = new JSONHelper(jsonObject);
 				if (!jsonHelper.checkJSONObject()) {
-					Toast.makeText(presenter.view.getIViewContext(), R.string.incorrect_city, Toast.LENGTH_SHORT).show();
+					Context context = presenter.view.getIViewContext();
+					if (context != null) {
+						Toast.makeText(presenter.view.getIViewContext(), R.string.incorrect_city, Toast.LENGTH_SHORT).show();
+					}
 					presenter.view.clearAllData();
 					return;
 				}
