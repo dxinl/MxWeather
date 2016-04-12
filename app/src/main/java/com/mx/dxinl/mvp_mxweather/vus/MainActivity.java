@@ -155,8 +155,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	@Override
-	public void showOthersContentPanel() {
-		othersContentPanel.setVisibility(View.VISIBLE);
+	public void showOthersContentPanel(boolean show) {
+		if (show) {
+			othersContentPanel.setVisibility(View.VISIBLE);
+		} else {
+			othersContentPanel.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

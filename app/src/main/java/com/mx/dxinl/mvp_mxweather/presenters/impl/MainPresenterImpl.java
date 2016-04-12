@@ -143,6 +143,7 @@ public class MainPresenterImpl implements MainPresenter {
 			CityInfo currentCityInfo = getCitiesInfo(false).get(index);
 			setCurrentCityInfo(currentCityInfo.name, currentCityInfo.num, currentCityInfo.type);
 			view.refreshFragment();
+			view.showOthersContentPanel(false);
 
 			return;
 		}
@@ -150,7 +151,7 @@ public class MainPresenterImpl implements MainPresenter {
 		FragmentManager fm = view.getIViewFragmentManager();
 		int id = item.getItemId();
 		boolean isFoundFragment = false;
-		view.showOthersContentPanel();
+		view.showOthersContentPanel(true);
 		switch (id) {
 			case R.id.add_city:
 				for (int i = fm.getBackStackEntryCount() - 1; i >= 0; i--) {

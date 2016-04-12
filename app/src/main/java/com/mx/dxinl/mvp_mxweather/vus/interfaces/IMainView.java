@@ -8,7 +8,7 @@ import android.view.Menu;
  * Created by DengXinliang on 2016/3/14.
  */
 public interface IMainView {
-	void showOthersContentPanel();
+	void showOthersContentPanel(boolean show);
 
 	void hideSoftInputMethod();
 
