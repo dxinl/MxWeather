@@ -21,7 +21,7 @@ public class NetworkHelper {
 	private static final boolean DEBUG = false;
 	private static NetworkHelper INSTANCE = null;
 
-	private final String KEY = "29a97c76564c46769d05279c3105cc4c";
+	private final String KEY = "your key";
 	private final String HTTP_API = "https://api.heweather.com/x3/%s?cityid=%s&key=%s";
 
 	private NetworkHelper() {}
