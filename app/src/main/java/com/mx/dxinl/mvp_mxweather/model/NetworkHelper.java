@@ -431,6 +431,8 @@ public class NetworkHelper {
 			return connection.getInputStream();
 		} catch (Exception e) {
 			return null;
+		} finally {
+			connection.disconnect();
 		}
 	}
 }

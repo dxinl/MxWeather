@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
 
+import com.mx.dxinl.mvp_mxweather.MxApplication;
 import com.mx.dxinl.mvp_mxweather.model.NetworkHelper;
 
 import java.io.File;
@@ -26,8 +27,6 @@ import java.util.concurrent.TimeoutException;
 public class ImageLoader {
 	private static final int MAX_SIZE = 1;
 	private static ImageLoader INSTANCE = null;
-	private final String SDCARD_PATH    = Environment.getExternalStorageDirectory().getAbsolutePath();
-	private final String IMAGE_PATH     = "MxWeather" + File.separator + "Image";
 	private final String IMG_SUFFIX     = ".png";
 
 	private final HashMap<String, AsyncTask<Object, Object, Bitmap>> taskList = new HashMap<>();
@@ -100,7 +99,8 @@ public class ImageLoader {
 	}
 
 	private Bitmap getBitmapFromDisk(String code) {
-		String path = SDCARD_PATH + File.separator + IMAGE_PATH;
+
+		String path = MxApplication.getAppExternalCacheDir();
 		File imgDir = new File(path);
 		if (imgDir.exists() && imgDir.isDirectory()) {
 			String imgPath = path + File.separator + code + IMG_SUFFIX;
@@ -164,7 +164,7 @@ public class ImageLoader {
 				throw new IOException("Cannot GET Bitmap From Network.");
 			}
 
-			String imgDirPath = SDCARD_PATH + File.separator + IMAGE_PATH;
+			String imgDirPath = MxApplication.getAppExternalCacheDir();
 			File imgDir = new File(imgDirPath);
 			if (!imgDir.exists() || !imgDir.isDirectory()) {
 				if (!imgDir.mkdirs()) {
