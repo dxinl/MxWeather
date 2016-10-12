@@ -17,7 +17,7 @@ import java.util.List;
  * Created by DengXinliang on 2016/1/29.
  */
 public class JSONHelper {
-	private final boolean DEBUG = false;
+	private static boolean debug = false;
 	private final String HEADER = "HeWeather data service 3.0";
 	private JSONObject jsonObject;
 
@@ -26,204 +26,223 @@ public class JSONHelper {
 	}
 
 	public boolean checkJSONObject() {
-		try {
-			JSONArray header = jsonObject.getJSONArray(HEADER);
-			String status = header.getJSONObject(0).getString("status");
-			if (DEBUG) {
-				System.out.println(status);
-			}
-			return status.equalsIgnoreCase("OK");
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return false;
-		}
+        JSONArray header = getJSONArray(jsonObject, HEADER);
+        String status = getJSONString(getJSONObject(header, 0), "status");
+        if (debug) {
+            System.out.println(status);
+        }
+        return status.equalsIgnoreCase("OK");
 	}
 
 	public List<HourlyWeatherBean> getHourlyWeather() {
-		try {
-			List<HourlyWeatherBean> hourlyWeathers = new ArrayList<>();
-			JSONObject header = jsonObject.getJSONArray(HEADER).getJSONObject(0);
-			JSONArray hourlyWeatherJSON = header.getJSONArray("hourly_forecast");
-			int index = 0;
-			while (true) {
-				JSONObject hourlyWeatherObject;
+        List<HourlyWeatherBean> hourlyWeathers = new ArrayList<>();
+        JSONObject header = getJSONObject(getJSONArray(jsonObject, HEADER), 0);
+        JSONArray hourlyWeatherJSON = getJSONArray(header, "hourly_forecast");
+        int index = 0;
+        while (true) {
+            JSONObject hourlyWeatherObject;
 
-				// avoid "index out of JSONArray range";
-				try {
-					hourlyWeatherObject = hourlyWeatherJSON.getJSONObject(index);
-				} catch (Exception e) {
-					break;
-				}
-				HourlyWeatherBean hourlyWeather = new HourlyWeatherBean();
-				hourlyWeather.tmp = hourlyWeatherObject.getString("tmp");
-				hourlyWeather.pop = hourlyWeatherObject.getString("pop");
+            hourlyWeatherObject = getJSONObject(hourlyWeatherJSON, index);
+            // avoid "index out of JSONArray range";
+            if (hourlyWeatherObject == null) {
+                break;
+            }
 
-				String date = hourlyWeatherObject.getString("date");
-				date = date.substring(date.length() - 5, date.length());
-				hourlyWeather.date = date;
+            HourlyWeatherBean hourlyWeather = new HourlyWeatherBean();
+            hourlyWeather.tmp = getJSONString(hourlyWeatherObject, "tmp");
+            hourlyWeather.pop = getJSONString(hourlyWeatherObject, "pop");
 
-				JSONObject windObject = hourlyWeatherObject.getJSONObject("wind");
-				hourlyWeather.dir = windObject.getString("dir");
-				hourlyWeather.sc = windObject.getString("sc");
-				hourlyWeathers.add(hourlyWeather);
+            String date = getJSONString(hourlyWeatherObject, "date");
+            date = date.substring(date.length() - 5, date.length());
+            hourlyWeather.date = date;
 
-				index++;
-			}
-			return hourlyWeathers;
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		}
+            JSONObject windObject = getJSONObject(hourlyWeatherObject, "wind");
+            hourlyWeather.dir = getJSONString(windObject, "dir");
+            hourlyWeather.sc = getJSONString(windObject, "sc");
+            hourlyWeathers.add(hourlyWeather);
+
+            index++;
+        }
+        return hourlyWeathers;
 	}
 
 	public NowWeatherBean getNowWeather() {
-		try {
-			NowWeatherBean nowWeather = new NowWeatherBean();
-			JSONObject header = jsonObject.getJSONArray(HEADER).getJSONObject(0);
-			JSONObject nowWeatherJSON = header.getJSONObject("now");
+        NowWeatherBean nowWeather = new NowWeatherBean();
+        JSONObject header = getJSONObject(getJSONArray(jsonObject, HEADER), 0);
+        JSONObject nowWeatherJSON = getJSONObject(header, "now");
 
-			nowWeather.code = nowWeatherJSON.getJSONObject("cond").getString("code");
-			nowWeather.txt = nowWeatherJSON.getJSONObject("cond").getString("txt");
-			nowWeather.fl = nowWeatherJSON.getString("fl");
-			nowWeather.hum = nowWeatherJSON.getString("hum");
-			nowWeather.pcpn = nowWeatherJSON.getString("pcpn");
-			nowWeather.pres = nowWeatherJSON.getString("pres");
-			nowWeather.tmp = nowWeatherJSON.getString("tmp");
-			nowWeather.vis = nowWeatherJSON.getString("vis");
-			nowWeather.deg = nowWeatherJSON.getJSONObject("wind").getString("deg");
-			nowWeather.dir = nowWeatherJSON.getJSONObject("wind").getString("dir");
-			nowWeather.sc = nowWeatherJSON.getJSONObject("wind").getString("sc");
-			nowWeather.spd = nowWeatherJSON.getJSONObject("wind").getString("spd");
+        nowWeather.code = getJSONString(getJSONObject(nowWeatherJSON, "cond"), "code");
+        nowWeather.txt = getJSONString(getJSONObject(nowWeatherJSON, "cond"), "txt");
+        nowWeather.fl = getJSONString(nowWeatherJSON, "fl");
+        nowWeather.hum = getJSONString(nowWeatherJSON, "hum");
+        nowWeather.pcpn = getJSONString(nowWeatherJSON, "pcpn");
+        nowWeather.pres = getJSONString(nowWeatherJSON, "pres");
+        nowWeather.tmp = getJSONString(nowWeatherJSON, "tmp");
+        nowWeather.vis = getJSONString(nowWeatherJSON, "vis");
+        nowWeather.deg = getJSONString(getJSONObject(nowWeatherJSON, "wind"), "deg");
+        nowWeather.dir = getJSONString(getJSONObject(nowWeatherJSON, "wind"), "dir");
+        nowWeather.sc = getJSONString(getJSONObject(nowWeatherJSON, "wind"), "sc");
+        nowWeather.spd = getJSONString(getJSONObject(nowWeatherJSON, "wind"), "spd");
 
-			return nowWeather;
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		}
+        return nowWeather;
 	}
 
 	public AirQualityBean getAirQuality() {
-		try {
-			AirQualityBean airQuality = new AirQualityBean();
-			JSONObject header = jsonObject.getJSONArray(HEADER).getJSONObject(0);
-			JSONObject airQualityJSON = header.getJSONObject("aqi").getJSONObject("city");
+        AirQualityBean airQuality = new AirQualityBean();
+        JSONObject header = getJSONObject(getJSONArray(jsonObject, HEADER), 0);
+        JSONObject airQualityJSON = getJSONObject(getJSONObject(header, "aqi"), "city");
 
-			airQuality.aqi = airQualityJSON.getString("aqi");
-			airQuality.co = airQualityJSON.getString("co");
-			airQuality.no2 = airQualityJSON.getString("no2");
-			airQuality.o3 = airQualityJSON.getString("o3");
-			airQuality.pm10 = airQualityJSON.getString("pm10");
-			airQuality.pm25 = airQualityJSON.getString("pm25");
-			airQuality.qlty = airQualityJSON.getString("qlty");
-			airQuality.so2 = airQualityJSON.getString("so2");
+        airQuality.aqi = getJSONString(airQualityJSON, "aqi");
+        airQuality.co = getJSONString(airQualityJSON, "co");
+        airQuality.no2 = getJSONString(airQualityJSON, "no2");
+        airQuality.o3 = getJSONString(airQualityJSON, "o3");
+        airQuality.pm10 = getJSONString(airQualityJSON, "pm10");
+        airQuality.pm25 = getJSONString(airQualityJSON, "pm25");
+        airQuality.qlty = getJSONString(airQualityJSON, "qlty");
+        airQuality.so2 = getJSONString(airQualityJSON, "so2");
 
-			return airQuality;
-		} catch (JSONException e) {
-			return null;
-		}
+        return airQuality;
 	}
 
 	public List<DailyWeatherBean> getDailyWeathers() {
+        List<DailyWeatherBean> dailyWeathers = new ArrayList<>();
+        JSONObject header = getJSONObject(getJSONArray(jsonObject, HEADER), 0);
+        JSONArray dailyWeatherJSON = getJSONArray(header, "daily_forecast");
+
+        int index = 0;
+        while (true) {
+            JSONObject dailyWeatherJsonObject;
+
+            dailyWeatherJsonObject = getJSONObject(dailyWeatherJSON, index);
+
+            // avoid "index out of JSONArray range";
+            if (dailyWeatherJsonObject == null) {
+                break;
+            }
+
+            DailyWeatherBean dailyWeather = new DailyWeatherBean();
+            String date = getJSONString(dailyWeatherJsonObject, "date");
+            int tmpIndex = date.indexOf("-");
+            if (tmpIndex != -1) {
+                date = date.substring(tmpIndex + 1);
+            }
+            dailyWeather.date = date;
+
+
+            dailyWeather.hum = getJSONString(dailyWeatherJsonObject, "hum");
+            dailyWeather.pcpn = getJSONString(dailyWeatherJsonObject, "pcpn");
+            dailyWeather.pop = getJSONString(dailyWeatherJsonObject, "pop");
+            dailyWeather.pres = getJSONString(dailyWeatherJsonObject, "pres");
+            dailyWeather.vis = getJSONString(dailyWeatherJsonObject, "vis");
+
+            JSONObject astroJSONObject = getJSONObject(dailyWeatherJsonObject, "astro");
+            dailyWeather.sr = getJSONString(astroJSONObject, "sr");
+            dailyWeather.ss = getJSONString(astroJSONObject, "ss");
+
+            JSONObject tmpJSONObject = getJSONObject(dailyWeatherJsonObject, "tmp");
+            dailyWeather.maxTmp = getJSONString(tmpJSONObject, "max");
+            dailyWeather.minTmp = getJSONString(tmpJSONObject, "min");
+
+            JSONObject condJSONObject = getJSONObject(dailyWeatherJsonObject, "cond");
+            dailyWeather.code_d = getJSONString(condJSONObject, "code_d");
+            dailyWeather.code_n = getJSONString(condJSONObject, "code_n");
+            dailyWeather.txt_d = getJSONString(condJSONObject, "txt_d");
+            dailyWeather.txt_n = getJSONString(condJSONObject, "txt_n");
+
+            JSONObject windJSONObject = getJSONObject(dailyWeatherJsonObject, "wind");
+            dailyWeather.deg = getJSONString(windJSONObject, "deg");
+            dailyWeather.dir = getJSONString(windJSONObject, "dir");
+            dailyWeather.sc = getJSONString(windJSONObject, "sc");
+            dailyWeather.spd = getJSONString(windJSONObject, "spd");
+
+            dailyWeathers.add(dailyWeather);
+            index++;
+        }
+
+        return dailyWeathers;
+	}
+
+	public SuggestionBean getSuggestion() {
+		SuggestionBean suggestion = new SuggestionBean();
+		JSONObject header = getJSONObject(getJSONArray(jsonObject, HEADER), 0);
+		JSONObject suggestionJSON = getJSONObject(header, "suggestion");
+
+		JSONObject summaryJSON = getJSONObject(suggestionJSON, "comf");
+		suggestion.sumBrf = getJSONString(summaryJSON, "brf");
+		suggestion.sumTxt = getJSONString(summaryJSON, "txt");
+
+		JSONObject cwJSON = getJSONObject(suggestionJSON, "cw");
+		suggestion.cwBrf = getJSONString(cwJSON, "brf");
+		suggestion.cwTxt = getJSONString(cwJSON, "txt");
+
+		JSONObject drsgJSON = getJSONObject(suggestionJSON, "drsg");
+		suggestion.drsgBrf = getJSONString(drsgJSON, "brf");
+		suggestion.drsgTxt = getJSONString(drsgJSON, "txt");
+
+		JSONObject fluJSON = getJSONObject(suggestionJSON, "flu");
+		suggestion.fluBrf = getJSONString(fluJSON, "brf");
+		suggestion.fluTxt = getJSONString(fluJSON, "txt");
+
+		JSONObject sportJSON = getJSONObject(suggestionJSON, "sport");
+		suggestion.sportBrf = getJSONString(sportJSON, "brf");
+		suggestion.sportTxt = getJSONString(sportJSON, "txt");
+
+		JSONObject travJSON = getJSONObject(suggestionJSON, "trav");
+		suggestion.travBrf = getJSONString(travJSON, "brf");
+		suggestion.travTxt = getJSONString(travJSON, "txt");
+
+		JSONObject uvJSON = getJSONObject(suggestionJSON, "uv");
+		suggestion.uvBrf = getJSONString(uvJSON, "brf");
+		suggestion.uvTxt = getJSONString(uvJSON, "txt");
+
+		return suggestion;
+	}
+
+	private JSONArray getJSONArray(JSONObject json, String name) {
+		if (json == null) {
+			return null;
+		}
 		try {
-			List<DailyWeatherBean> dailyWeathers = new ArrayList<>();
-			JSONObject header = jsonObject.getJSONArray(HEADER).getJSONObject(0);
-			JSONArray dailyWeatherJSON = header.getJSONArray("daily_forecast");
-
-			int index = 0;
-			while (true) {
-				JSONObject DailyWeatherJsonObject;
-
-				try {
-					DailyWeatherJsonObject = dailyWeatherJSON.getJSONObject(index);
-				} catch (Exception e) {
-					break;
-				}
-
-				DailyWeatherBean dailyWeather = new DailyWeatherBean();
-				String date = DailyWeatherJsonObject.getString("date");
-				int tmpIndex = date.indexOf("-");
-				if (tmpIndex != -1) {
-					date = date.substring(tmpIndex + 1);
-				}
-				dailyWeather.date = date;
-
-
-				dailyWeather.hum = DailyWeatherJsonObject.getString("hum");
-				dailyWeather.pcpn = DailyWeatherJsonObject.getString("pcpn");
-				dailyWeather.pop = DailyWeatherJsonObject.getString("pop");
-				dailyWeather.pres = DailyWeatherJsonObject.getString("pres");
-				dailyWeather.vis = DailyWeatherJsonObject.getString("vis");
-
-				JSONObject astroJSONObject = DailyWeatherJsonObject.getJSONObject("astro");
-				dailyWeather.sr = astroJSONObject.getString("sr");
-				dailyWeather.ss = astroJSONObject.getString("ss");
-
-				JSONObject tmpJSONObject = DailyWeatherJsonObject.getJSONObject("tmp");
-				dailyWeather.maxTmp = tmpJSONObject.getString("max");
-				dailyWeather.minTmp = tmpJSONObject.getString("min");
-
-				JSONObject condJSONObject = DailyWeatherJsonObject.getJSONObject("cond");
-				dailyWeather.code_d = condJSONObject.getString("code_d");
-				dailyWeather.code_n = condJSONObject.getString("code_n");
-				dailyWeather.txt_d = condJSONObject.getString("txt_d");
-				dailyWeather.txt_n = condJSONObject.getString("txt_n");
-
-				JSONObject windJSONObject = DailyWeatherJsonObject.getJSONObject("wind");
-				dailyWeather.deg = windJSONObject.getString("deg");
-				dailyWeather.dir = windJSONObject.getString("dir");
-				dailyWeather.sc = windJSONObject.getString("sc");
-				dailyWeather.spd = windJSONObject.getString("spd");
-
-				dailyWeathers.add(dailyWeather);
-				index++;
-			}
-
-			return dailyWeathers;
+			return json.getJSONArray(name);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public SuggestionBean getSuggestion() {
+	private JSONObject getJSONObject(JSONObject json, String name) {
+		if (json == null) {
+			return null;
+		}
 		try {
-			SuggestionBean suggestion = new SuggestionBean();
-			List<DailyWeatherBean> dailyWeathers = new ArrayList<>();
-			JSONObject header = jsonObject.getJSONArray(HEADER).getJSONObject(0);
-			JSONObject suggestionJSON = header.getJSONObject("suggestion");
-
-			JSONObject summaryJSON = suggestionJSON.getJSONObject("comf");
-			suggestion.sumBrf = summaryJSON.getString("brf");
-			suggestion.sumTxt = summaryJSON.getString("txt");
-
-			JSONObject cwJSON = suggestionJSON.getJSONObject("cw");
-			suggestion.cwBrf = cwJSON.getString("brf");
-			suggestion.cwTxt = cwJSON.getString("txt");
-
-			JSONObject drsgJSON = suggestionJSON.getJSONObject("drsg");
-			suggestion.drsgBrf = drsgJSON.getString("brf");
-			suggestion.drsgTxt = drsgJSON.getString("txt");
-
-			JSONObject fluJSON = suggestionJSON.getJSONObject("flu");
-			suggestion.fluBrf = fluJSON.getString("brf");
-			suggestion.fluTxt = fluJSON.getString("txt");
-
-			JSONObject sportJSON = suggestionJSON.getJSONObject("sport");
-			suggestion.sportBrf = sportJSON.getString("brf");
-			suggestion.sportTxt = sportJSON.getString("txt");
-
-			JSONObject travJSON = suggestionJSON.getJSONObject("trav");
-			suggestion.travBrf = travJSON.getString("brf");
-			suggestion.travTxt = travJSON.getString("txt");
-
-			JSONObject uvJSON = suggestionJSON.getJSONObject("uv");
-			suggestion.uvBrf = uvJSON.getString("brf");
-			suggestion.uvTxt = uvJSON.getString("txt");
-
-			return suggestion;
+			return json.getJSONObject(name);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	private JSONObject getJSONObject(JSONArray json, int index) {
+		if (json == null) {
+			return null;
+		}
+		try {
+			return json.getJSONObject(index);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private String getJSONString(JSONObject json, String name) {
+		if (json == null) {
+			return "";
+		}
+		try {
+			return json.getString(name);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return "";
 		}
 	}
 }

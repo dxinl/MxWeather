@@ -127,6 +127,7 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			humidity.setText(humStr);
 			wind.setText(String.format(getString(R.string.wind), nowWeather.dir + nowWeather.sc));
 			visibility.setText(String.format(getString(R.string.visibility), nowWeather.vis));
+			((MainActivity) getActivity()).updateNavHeader(nowWeather.code);
 		}
 	}
 
@@ -159,7 +160,6 @@ public class WeatherFragment extends HasOptionsMenuFragment implements IWeatherV
 			setNowWeather(nowWeather);
 			setAirQuality(airQuality);
 			setSuggestion(suggestion);
-			((MainActivity) getActivity()).updateNavHeader(nowWeather.code);
 		}
 	}
 

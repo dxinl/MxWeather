@@ -21,8 +21,8 @@ public class NetworkHelper {
 	private static final boolean DEBUG = false;
 	private static NetworkHelper INSTANCE = null;
 
-	private final String KEY = "your key";
-	private final String HTTP_API = "https://api.heweather.com/x3/%s?cityid=%s&key=%s";
+	private static final String KEY = "Your Key";
+	private static final String HTTP_API = "https://api.heweather.com/x3/%s?cityid=%s&key=%s";
 
 	private NetworkHelper() {}
 
@@ -431,8 +431,6 @@ public class NetworkHelper {
 			return connection.getInputStream();
 		} catch (Exception e) {
 			return null;
-		} finally {
-			connection.disconnect();
 		}
 	}
 }
