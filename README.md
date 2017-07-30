@@ -1,6 +1,9 @@
 # MxWeather
+> This is a practice of MVP pattern, custom view, network programing, and so on.
 
-       This is a practice of MVP pattern, custom view, network programing, and so on.
+## Deprecated
+The weather API used in this project was deprecated.
+
 ## Preview
 ![preview1](preview1.png)
 <br></br>
